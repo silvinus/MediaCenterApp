@@ -1,0 +1,58 @@
+{
+  "name": "mediacenterapp",
+  "version": "1.0.0",
+  "description": "Networked media center app for rpi",
+  "main": "index.js",
+  "scripts": {
+    "dev": "SET NODE_ENV=development && nodemon --inspect ./bin/www --watch public --watch dist -e js,html ",
+    "compil": "grunt",
+    "gcompil": "gulp",
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silvinus/MediaCenterApp.git"
+  },
+  "keywords": [
+    "media",
+    "center",
+    "raspberry",
+    "node"
+  ],
+  "author": "silvinus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/silvinus/MediaCenterApp/issues"
+  },
+  "homepage": "https://github.com/silvinus/MediaCenterApp#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "errorhandler": "^1.5.0",
+    "exif-parser": "^0.1.12",
+    "express": "^4.15.3",
+    "ffmpeg": "0.0.4",
+    "inversify": "^4.3.0",
+    "method-override": "^2.3.9",
+    "morgan": "^1.8.2",
+    "nedb": "^1.8.0",
+    "reflect-metadata": "^0.1.10",
+    "util-extend": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.16.4",
+    "@types/cookie-parser": "^1.4.0",
+    "@types/errorhandler": "0.0.30",
+    "@types/method-override": "0.0.29",
+    "@types/morgan": "^1.7.32",
+    "grunt": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.16",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.1",
+    "nodemon": "^1.11.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
+  }
+}
