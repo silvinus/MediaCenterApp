@@ -6,13 +6,13 @@ import ffmpeg = require('ffmpeg');
 import extend = require('util-extend');
 
 export interface IFileSystem {
-    files(directory: fs.PathLike): Array<File>
+    files(directory: String): Array<File>
 }
 
 @injectable()
 export class FileSystemUtil implements IFileSystem {
-    private walkInternal(directory: fs.PathLike, fileList: File[]): void {
-        let files = fs.readdirSync(directory);
+    private walkInternal(directory: String, fileList: File[]): void {
+        let files = fs.readdirSync(directory.toString());
         files.forEach((value: String) => {
             if(fs.statSync(directory.toString() + "/" + value).isDirectory()) {
                 this.walkInternal(directory.toString() + "/" + value, fileList);
@@ -23,7 +23,7 @@ export class FileSystemUtil implements IFileSystem {
         });
     }
 
-    public files(directory: fs.PathLike): Array<File> {
+    public files(directory: String): Array<File> {
         console.debug("walk in directory", directory);
         let fileList: File[] = new Array();
         this.walkInternal(directory, fileList);
@@ -33,9 +33,9 @@ export class FileSystemUtil implements IFileSystem {
 
 export class File {
     private readonly _fileName: String;
-    private readonly _directory: fs.PathLike;
+    private readonly _directory: String;
 
-    constructor(fileName: String, directory: fs.PathLike) {
+    constructor(fileName: String, directory: String) {
         this._fileName = fileName;
         this._directory = directory;
     }
@@ -44,7 +44,7 @@ export class File {
         return this._fileName;
     }
 
-    get directory(): fs.PathLike {
+    get directory(): String {
         return this._directory;
     }
 }

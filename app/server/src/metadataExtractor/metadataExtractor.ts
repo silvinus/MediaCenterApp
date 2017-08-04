@@ -1,7 +1,7 @@
 import fs = require("fs");
 
 export interface IMetadataExtractor {
-    extract(fileName: String, directoryPath: fs.PathLike): Promise<metadata.Metadata>;
+    extract(fileName: String, directoryPath: String): Promise<metadata.Metadata>;
 }
 
 

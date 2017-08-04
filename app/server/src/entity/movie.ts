@@ -3,20 +3,20 @@ import fs = require("fs");
 
 export class Movie {
     private _fileName: String;
-    private _directory: fs.PathLike;
+    private _directory: String;
     private _metadata: metadata.Metadata;
 
-    get fileName():String {
+    get fileName(): String {
         return this.fileName;
     }
-    set fileName(fileName:String) {
+    set fileName(fileName: String) {
         this._fileName = fileName;
     }
 
-    get directory():fs.PathLike {
+    get directory(): String {
         return this.directory;
     }
-    set directory(directory:fs.PathLike) {
+    set directory(directory: String) {
         this._directory = directory;
     }
 

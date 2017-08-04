@@ -5,7 +5,7 @@ import fs = require("fs");
 
 @injectable()
 export class FfmpegMetadataExtractor implements IMetadataExtractor {
-    extract(fileName: String, directoryPath: fs.PathLike): Promise<metadata.Metadata> {
+    extract(fileName: String, directoryPath: String): Promise<metadata.Metadata> {
         return new ffmpeg(directoryPath.toString() + "/" + fileName)
                         .then((video) => {
                             return metadata.Metadata.builder()

@@ -71,9 +71,12 @@ export class Server {
    */
   public config() {
     //add static paths
-    this.app.use(express.static(path.join(__dirname, "public")));
-    this.app.use(express.static(path.join(__dirname, "app/client")));
-    this.app.use('/node_modules', express.static('./node_modules'));
+    console.log('Static path', "app/client/dist/src");
+    console.log('Static path', "node_modules");
+
+    // this.app.use(express.static(path.join(__dirname, "public")));
+    this.app.use(express.static("app/client/dist"));
+    this.app.use('/node_modules', express.static('node_modules'));
 
     //configure pug
     // this.app.set("views", path.join(__dirname, "views"));
