@@ -68,6 +68,6 @@ gulp.task("build", ['clean', 'serverscripts', 'clientscripts'], () => {
 // By adding this, we can run "gulp watch" to automatically
 // run the build when we change a script
 gulp.task('watch', () => {
-  gulp.watch('app/client/src/**/*.ts', [ 'clientscripts' ]);
-  gulp.watch('app/server/src/**/*.ts', [ 'serverscripts' ]);
+  gulp.watch('app/client/src/**/*.*', [ 'clientscripts' ]);
+  gulp.watch('app/server/src/**/*.*', [ 'serverscripts' ]);
 });

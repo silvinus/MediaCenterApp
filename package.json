@@ -5,15 +5,15 @@
   "main": "index.js",
   "scripts": {
     "ng": "ng",
-    "start": "node ./bin/www",
+    "start": "node ./app/server/bin/www",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "SET NODE_ENV=development && nodemon --inspect ./app/server/bin/www --watch public --watch dist -e js,html ",
-    "gcompil": "grunt",
+    "dev": "SET NODE_ENV=development && concurrently \"npm run start\" \"npm run watch\" ",
     "install": "gulp install",
     "compil": "gulp build",
+    "watch": "gulp watch",
     "gulp": "gulp"
   },
   "repository": {
@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/silvinus/MediaCenterApp#readme",
   "devDependencies": {
+    "concurrently": "^3.5.0",    
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.1",

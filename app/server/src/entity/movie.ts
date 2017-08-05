@@ -1,5 +1,4 @@
 import { metadata } from "../metadataExtractor/metadataExtractor";
-import fs = require("fs");
 
 export class Movie {
     private _fileName: String;

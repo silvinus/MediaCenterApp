@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './templates/app.component.html',
+  styleUrls: ['./styles/app.component.css']
 })
 export class AppComponent {
-  title = 'Media center app';
+  title = 'greatest Media center app';
 }
