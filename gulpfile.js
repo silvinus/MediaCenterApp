@@ -4,26 +4,35 @@ let gulp = require('gulp');
 let del = require('del');
 let ts = require('gulp-typescript');
 let sourcemaps = require('gulp-sourcemaps');
+let runSequence = require('run-sequence');
+var exec = require('child_process').exec;
 
 let clientTsProject = ts.createProject('app/client/src/tsconfig.app.json');
 let serverTsProject = ts.createProject('app/server/tsconfig.json');
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del('app/[client|server]/dist/**/*');
+  del('app/client/dist/**/*');
+  return del('app/server/dist/**/*');
 });
 
 // These tasks will be run when you just type "gulp"
 gulp.task('default', [ 'clientscripts', 'serverscripts' ]);
 
-// This task can be run alone with "gulp clientscripts"
-gulp.task('clientscripts', () => {
-  return clientTsProject.src()
-                        .pipe(clientTsProject())
-                        .pipe(sourcemaps.init()) 
-                        .js
-                        .pipe(sourcemaps.write('.'))
-                        .pipe(gulp.dest('app/client/dist'));
+gulp.task('install:server', done => {
+  exec('npm install', { cwd: 'app/server', stdio: 'inherit' }, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    // cb(err);
+  }).on('close', done);
+});
+
+gulp.task('install:client', done => {
+  exec('npm install', { cwd: 'app/client', stdio: 'inherit' }, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    // cb(err);
+  }).on('close', done);
 });
 
 // This task can be run alone with "gulp serverscripts"
@@ -34,30 +43,25 @@ gulp.task('serverscripts', () => {
                         .pipe(gulp.dest('app/server/dist'));
 });
 
-/**
- * Copy all resources that are not TypeScript files into build directory.
- */
-gulp.task("copy:assets", () => {
-    return gulp.src(["app/client/src/**/*", "!**/*.ts", "!**/*.json", "**/*.gitkeep"])
-        .pipe(gulp.dest("app/client/dist"));
-});
+gulp.task('clientscripts', function (done) {
+  exec('ng build', { cwd: 'app/client', stdio: 'inherit' }, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    // cb(err);
+  }).on('close', done);
+})
 
-// copy dependencies
-gulp.task('copy:libs', ['clean'], function() {
-  return gulp.src([
-      'node_modules/angular2/bundles/angular2-polyfills.js',
-      'node_modules/systemjs/dist/system.src.js',
-      'node_modules/rxjs/bundles/Rx.js',
-      'node_modules/angular2/bundles/angular2.dev.js',
-      'node_modules/angular2/bundles/router.dev.js'
-    ])
-    .pipe(gulp.dest('dist/lib'))
+/**
+ * Install dependencies
+ */
+gulp.task("install", ['install:server', 'install:client'], () => {
+    console.log("Building the project ...");
 });
 
 /**
  * Build the project.
  */
-gulp.task("build", ['clean', 'serverscripts', 'clientscripts', 'resources'], () => {
+gulp.task("build", ['clean', 'serverscripts', 'clientscripts'], () => {
     console.log("Building the project ...");
 });
 

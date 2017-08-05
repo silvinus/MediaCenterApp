@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class MediaCenterClientPage {
+export class ClientPage {
   navigateTo() {
     return browser.get('/');
   }

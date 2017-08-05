@@ -71,7 +71,7 @@ export class Server {
    */
   public config() {
     //add static paths
-    console.log('Static path', "app/client/dist/src");
+    console.log('Static path', "app/client/dist");
     console.log('Static path', "node_modules");
 
     // this.app.use(express.static(path.join(__dirname, "public")));

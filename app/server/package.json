@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Networked media center app for rpi",
+  "author": "silvinus",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "errorhandler": "^1.5.0",
+    "exif-parser": "^0.1.12",
+    "express": "^4.15.3",
+    "ffmpeg": "0.0.4",
+    "inversify": "^4.3.0",
+    "method-override": "^2.3.9",
+    "morgan": "^1.8.2",
+    "nedb": "^1.8.0",
+    "reflect-metadata": "^0.1.10",
+    "util-extend": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.16.4",
+    "@types/cookie-parser": "^1.4.0",
+    "@types/errorhandler": "0.0.30",
+    "@types/method-override": "0.0.29",
+    "@types/morgan": "^1.7.32",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.1",
+    "nodemon": "^1.11.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
+  }
+}

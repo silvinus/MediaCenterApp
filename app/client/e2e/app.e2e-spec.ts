@@ -1,11 +1,10 @@
-import { MediaCenterClientPage } from './app.po';
-import {} from 'jasmine';
+import { ClientPage } from './app.po';
 
-describe('media-center-client App', () => {
-  let page: MediaCenterClientPage;
+describe('client App', () => {
+  let page: ClientPage;
 
   beforeEach(() => {
-    page = new MediaCenterClientPage();
+    page = new ClientPage();
   });
 
   it('should display welcome message', () => {

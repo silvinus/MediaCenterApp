@@ -2,14 +2,14 @@
 "use strict";
 
 //module dependencies
-var server = require("../app/server/dist/server");
+var server = require("../dist/server");
 var debug = require("debug")("express:server");
 var http = require("http");
 
 var cp = require('child_process');
-var grunt = cp.exec('grunt watcher', ['--force'])
-console.log("%s", "grunt is running");
-grunt.stdout.on('data', function(data) {
+var gulp = cp.exec('gulp watch', ['--force'])
+console.log("%s", "gulp is running");
+gulp.stdout.on('data', function(data) {
     // relay output to console
     console.log("%s", data)
 });
