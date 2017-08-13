@@ -7,36 +7,19 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Gulp clientscripts",
-            "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
-            "args": [
-                "clientscripts"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Gulp task",
-            "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
-            "args": [
-                "default"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceRoot}\\bin\\www",
             "cwd": "${workspaceRoot}",
-            "outFiles": [
-                "${workspaceRoot}/dist/**/*.js"
-            ],
+            "name": "Launch via NPM",
+            "program": "${workspaceRoot}\\app\\server\\bin\\www",
             "env": {
                 "NODE_ENV": "development"
             },
+            "outFiles": [
+                "${workspaceRoot}/app/server/dist/**/*.js"
+            ],
             "console": "internalConsole",
             "sourceMaps": true,
             "trace": "all"
+            // "port": 5858
         },
         {
             "type": "node",

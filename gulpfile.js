@@ -5,7 +5,8 @@ let del = require('del');
 let ts = require('gulp-typescript');
 let sourcemaps = require('gulp-sourcemaps');
 let runSequence = require('run-sequence');
-var exec = require('child_process').exec;
+let exec = require('child_process').exec;
+let path = require("path")
 
 let clientTsProject = ts.createProject('app/client/src/tsconfig.app.json');
 let serverTsProject = ts.createProject('app/server/tsconfig.json');
@@ -38,8 +39,16 @@ gulp.task('install:client', done => {
 // This task can be run alone with "gulp serverscripts"
 gulp.task('serverscripts', () => {
   return serverTsProject.src()
+  
+    .pipe(sourcemaps.init())
                         .pipe(serverTsProject())
                         .js
+    .pipe(sourcemaps.write({
+      mapSources: (path) => path, // This affects the "sources" attribute even if it is a no-op. I don't know why.
+      sourceRoot: (file) => {
+        return path.relative(file.relative, path.join(file.cwd, 'src'));
+      }
+    }))
                         .pipe(gulp.dest('app/server/dist'));
 });
 

@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "SET NODE_ENV=development && concurrently \"npm run start\" \"npm run watch\" ",
+    "dev": "SET NODE_ENV=development && concurrently \"nodemon --inspect ./app/server/bin/www\" \"npm run watch\" ",
     "install": "gulp install",
     "compil": "gulp build",
     "watch": "gulp watch",
