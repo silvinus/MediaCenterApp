@@ -6,8 +6,8 @@ import { IFileSystem } from "../utils/fileSystemUtils";
 import { IHTTPUtils } from "../utils/httpUtils";
 import TOOLS from "../utils/toolsType"
 import "reflect-metadata";
-import { Movie } from "../entity/movie";
-import { IMetadataExtractor, metadata } from "../metadataExtractor/metadataExtractor";
+import { Movie } from "../model/movie";
+import { IMetadataExtractorExecutor, metadata } from "../metadataExtractor/metadataExtractor";
 
 
 /**
@@ -21,7 +21,7 @@ export class AppRoute implements IRoute {
   private readonly fsTools: IFileSystem;
   private readonly httpUtils: IHTTPUtils;
   private readonly collection: IDatabase;
-  private readonly extractors: IMetadataExtractor[];
+  private readonly executor: IMetadataExtractorExecutor;
   readonly APP_BASE_URL = "/app";
 
   /**
@@ -34,12 +34,12 @@ export class AppRoute implements IRoute {
     @inject(TOOLS.FsUTils) fsTools: IFileSystem,
     @inject(TOOLS.HTTPUtils) httpUtils: IHTTPUtils,
     @inject("movies") collection: IDatabase,
-    @multiInject("extractors")extractors: IMetadataExtractor[]
+    @inject("extractorsExecutor") executor: IMetadataExtractorExecutor 
   ) {
     this.fsTools = fsTools;
     this.httpUtils = httpUtils;
     this.collection = collection;
-    this.extractors = extractors;
+    this.executor = executor;
   }
 
   public configure(router: Router) {
@@ -57,27 +57,19 @@ export class AppRoute implements IRoute {
   public scan(req: Request, res: Response, next: NextFunction) {
     let allPromise: Promise<any>[] = new Array();
 
-    this.fsTools.files("D:\\test")
+    this.fsTools.files("D:\\temp")
         .forEach(file => {
           allPromise.push(this.collection.find({ _fileName: file.fileName })
               .then(movies => {
                 if(movies.length == 0) {
-                  // TODO: export into service ?
-                  let extractorPromises: Promise<metadata.Metadata>[] = new Array(); // TODO: Why any ?
-                  this.extractors.forEach(extractor => {
-                    extractorPromises.push(extractor.extract(file.fileName, file.directory));
-                  });
-
-                  return Promise.all(extractorPromises)
-                                .then(metas => {
-                                        let movie = new Movie();
-                                        movie.fileName = file.fileName;
-                                        movie.directory = file.directory;
-                                        let fileMeta = metadata.Metadata.builder().build();
-                                        metas.forEach(m => fileMeta = metadata.Metadata.merge(fileMeta, m));
-                                        movie.metadata = fileMeta;
-                                        return this.collection.insertMovie(movie);
-                                      });
+                  let builder = metadata.Metadata.builder();
+                  builder.fileName = file.fileName.toString();
+                  builder.directory = file.directory.toString();
+                  return this.executor.execute(builder)
+                              .then((final) => {
+                                  let movie = Movie.fromMetadata(final.build());
+                                  return this.collection.insertMovie(movie);
+                              });
                 }
               }));
         });

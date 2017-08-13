@@ -5,13 +5,10 @@ import fs = require("fs");
 
 @injectable()
 export class FfmpegMetadataExtractor implements IMetadataExtractor {
-    extract(fileName: String, directoryPath: String): Promise<metadata.Metadata> {
-        return new ffmpeg(directoryPath.toString() + "/" + fileName)
+    extract(builder: metadata.Builder): Promise<void> {
+        return new ffmpeg(builder.directory.toString() + "/" + builder.fileName)
                         .then((video) => {
-                            return metadata.Metadata.builder()
-                                                .title(video.metadata.title)
-                                                .subTitle("")
-                                                .build();
+                            builder.title = video.metadata.title;
                         }, (err) => {
                             console.log('Error: ' + err);
                         });

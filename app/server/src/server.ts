@@ -76,7 +76,7 @@ export class Server {
 
     // this.app.use(express.static(path.join(__dirname, "public")));
     this.app.use(express.static("app/client/dist"));
-    this.app.use('/node_modules', express.static('node_modules'));
+    //this.app.use('/swimlane', express.static('app/client/node_modules/@swimlane'));
 
     //configure pug
     // this.app.set("views", path.join(__dirname, "views"));

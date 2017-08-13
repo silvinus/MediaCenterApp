@@ -1,7 +1,7 @@
 import Datastore = require("nedb");
 import { inject, injectable } from "inversify";
 import CONST from "../IoC/constantes"
-import { Movie } from "../entity/movie"
+import { Movie } from "../model/movie"
 
 export interface IDatabase {
     find(query: any): Promise<Array<Movie>>;
