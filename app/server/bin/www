@@ -7,6 +7,7 @@ var debug = require("debug")("express:server");
 var http = require("http");
 
 var cp = require('child_process');
+
 var gulp = cp.exec('gulp watch', ['--force'])
 console.log("%s", "gulp is running");
 gulp.stdout.on('data', function(data) {
@@ -17,11 +18,9 @@ gulp.stdout.on('data', function(data) {
 var dbPath = './.mediacenter/db/mediacenter';
 var logPath = './.mediacenter/logs';
 
-var Datastore = require('nedb')
-  , db = new Datastore({ filename: dbPath, autoload: true });
-
 //create http server
 var httpPort = normalizePort(process.env.PORT || 8080);
+console.log(httpPort)
 var app = server.Server.bootstrap().app;
 app.set("port", httpPort);
 app.use(promiseify);
@@ -63,9 +62,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === "string"
+  var bind = "Port"; /*typeof port === "string"
     ? "Pipe " + port
-    : "Port " + port;
+    : "Port " + port;*/
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
