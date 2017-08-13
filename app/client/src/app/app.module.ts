@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule }    from '@angular/http';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from "@angular/material"
+
 import { AppComponent } from './app.component';
 import { MoviesListComponent } from './components/movies.component'
 import { MovieService } from './services/movies.service'
@@ -12,7 +15,9 @@ import { MovieService } from './services/movies.service'
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [MovieService],
   bootstrap: [AppComponent]

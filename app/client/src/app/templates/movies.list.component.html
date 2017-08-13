@@ -1,7 +1,11 @@
-<ul>
-  <li *ngFor="let movie of movies">
-    <span class="badge">{{movie._fileName}}</span>
-    <span>{{movie._directory}}</span>
-    <span>{{movie._metadata}}</span>
-  </li>
-</ul>
+<md-grid-list cols="5" gutterSize="25px">
+  <md-grid-tile *ngFor="let movie of movies">
+    <img [alt]="movie._metadata._title" [src]="movie._metadata._imageUrl">
+    <md-grid-tile-footer>
+      <h3 md-line>{{movie._metadata._title}}</h3>
+      <span md-line>{{movie._fileName}}</span>
+      <span md-line>{{movie._directory}}</span>
+      <md-icon>star_border</md-icon>
+    </md-grid-tile-footer>
+  </md-grid-tile>
+</md-grid-list>
