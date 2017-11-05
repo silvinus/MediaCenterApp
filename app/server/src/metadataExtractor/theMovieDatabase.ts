@@ -8,12 +8,23 @@ import qs = require('querystring');
 export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
     // TODO: export on settings
     private readonly _apiKey: String = "api_key=8c46bd4597983f80f3281bcb4568e066";
+    private readonly _conf: Promise<any>;
+
+	constructor() {
+        this._conf = this.configuration().then((conf) => {
+                            return conf;
+                        });
+	}
+    
 
     extract(builder: metadata.Builder): Promise<void> {
         // first find configurations
+        if(builder.imageUrl) {
+            return Promise.resolve();
+        }
 
         return new Promise((resolve, reject) => {
-            this.configuration().then((conf) => {
+            this._conf.then((conf) => {
                     const _conf = conf;
                     // finally search movie
                     this.search(builder.title || builder.fileName).then((result) => {

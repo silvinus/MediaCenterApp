@@ -47,4 +47,8 @@ export class File {
     get directory(): String {
         return this._directory;
     }
+
+    get extension(): string {
+        return this._fileName.substr(this._fileName.lastIndexOf('.') + 1);
+    }
 }

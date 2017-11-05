@@ -49,7 +49,7 @@ gulp.task('serverscripts', () => {
         return path.relative(file.relative, path.join(file.cwd, 'src'));
       }
     }))
-                        .pipe(gulp.dest('app/server/dist'));
+    .pipe(gulp.dest('app/server/dist'));
 });
 
 gulp.task('clientscripts', function (done) {

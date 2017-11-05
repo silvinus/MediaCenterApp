@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 // import { Movie } from '../../../../server/src/entity/movie';
 import { MovieService } from '../services/movies.service';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'movies-list',
@@ -9,23 +12,19 @@ import { MovieService } from '../services/movies.service';
   styleUrls: ['../styles/movies.list.component.scss']
 })
 export class MoviesListComponent implements OnInit {
-    movies: any[];
+    movies: Observable<any[]>;
+    selectedMovie; any;
+    private selectedId: number;
 
-    constructor(private service: MovieService) {
-
+    constructor(private service: MovieService,
+                private router: Router) {
     }
 
-    getMovies(): void {
-        this.service
-        .movies()
-        .then(movies => { 
-            console.log(movies);
-            this.movies = movies; 
-        });
-    }
-
-    
     ngOnInit(): void {
-        this.getMovies();
+        this.movies = this.service.movies();
+    }
+
+    onSelect(movie: any) {
+        this.router.navigate(['/movie', movie._metadata._imdbId]);
     }
 }

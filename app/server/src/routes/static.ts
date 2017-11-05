@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseRoute } from "./route";
+import { IRoute } from './route';
+import { injectable } from "inversify";
 
 
 /**
@@ -7,23 +8,15 @@ import { BaseRoute } from "./route";
  * Route for static content like index.html and other angular template
  * @class User
  */
-export class StaticRoute extends BaseRoute {
-
-  /**
-   * Create the routes.
-   *
-   * @class IndexRoute
-   * @method create
-   * @static
-   */
-  public static create(router: Router) {
-    //log
-    console.log("[IndexRoute::create] Creating index route.");
-
-    //add home page route
-    router.get("/", (req: Request, res: Response, next: NextFunction) => {
-      new StaticRoute().index(req, res, next);
-    });
+@injectable()
+export class StaticRoute implements IRoute {
+  configure(router: Router) {
+    console.log("[StaticRoute::create] Creating index route.");
+    
+      //add home page route
+      router.get("/", (req: Request, res: Response, next: NextFunction) => {
+        this.index(req, res, next);
+      });
   }
 
   /**
@@ -33,7 +26,6 @@ export class StaticRoute extends BaseRoute {
    * @constructor
    */
   constructor() {
-    super();
   }
 
   /**
@@ -47,7 +39,7 @@ export class StaticRoute extends BaseRoute {
    */
   public index(req: Request, res: Response, next: NextFunction) {
     //set custom title
-    this.title = "Home | Tour of Heros";
+    // this.title = "Home | Tour of Heros";
 
     //set options
     let options: Object = {
@@ -55,6 +47,15 @@ export class StaticRoute extends BaseRoute {
     };
 
     //render template
-    this.render(req, res, "index", options);
+    // this.render(req, res, "index", options);
+        //add constants
+    res.locals.BASE_URL = "/";
+    //add scripts
+    // res.locals.scripts = this.scripts;
+    //add title
+    res.locals.title = "index";
+
+    //render view
+    res.render("index", options);
   }
 }

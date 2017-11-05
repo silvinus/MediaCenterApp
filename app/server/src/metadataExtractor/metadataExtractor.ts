@@ -42,9 +42,16 @@ export namespace metadata {
         public static builder(): Builder {
             return new Builder();
         }
+        public static fromObject(obj: any): Metadata {
+            return new Metadata(obj._fileName, obj._directory, obj._host, obj._title,
+                                    obj._subTitle, obj._imageUrl, obj._posterImageUrl,
+                                    obj._overview, obj._imdbId, obj._genres, obj._releaseDate,
+                                    obj._popularity, obj._alternative);
+        }
 
         private readonly _fileName: string = "";
         private readonly _directory: string = "";
+        private readonly _host: string = "";
         private readonly _title: string = "";
         private readonly _subTitle: string = "";
         private readonly _imageUrl: string = "";
@@ -56,12 +63,12 @@ export namespace metadata {
         private readonly _popularity: number;
         private readonly _alternative: any[];
 
-
-        constructor(fileName: string, directory: string, title: string, subtitle: string,
+        constructor(fileName: string, directory: string, host: string, title: string, subtitle: string,
                         imageUrl: string, posterImageUrl: string, overview: string, imdbId: number,
                         genres: number[], releaseDate: string, popularity: number, alternative: any[]) {
             this._fileName = fileName;
             this._directory = directory;
+            this._host = host;
             this._title = title;
             this._subTitle = subtitle;
             this._imageUrl = imageUrl;
@@ -81,6 +88,10 @@ export namespace metadata {
             
         public get directory(): string  {
             return this._directory;
+        }
+
+        public get host(): string  {
+            return this._host;
         }
         
         public get title(): string  {
@@ -128,6 +139,7 @@ export namespace metadata {
     export class Builder {
         private _fileName: string = "";
         private _directory: string = "";
+        private _host: string = "";
         private _title: string = "";
         private _subTitle: string = "";
         private _imageUrl: string = "";
@@ -153,6 +165,14 @@ export namespace metadata {
 
         public set directory(value: string ) {
             this._directory = value;
+        }
+
+        public get host(): string  {
+            return this._host;
+        }
+
+        public set host(value: string ) {
+            this._host = value;
         }
         
         public get title(): string  {
@@ -238,6 +258,7 @@ export namespace metadata {
         public build(): Metadata {
             return new Metadata(this._fileName, 
                 this._directory, 
+                this._host,
                 this._title, 
                 this._subTitle,
                 this._imageUrl, this._posterImageUrl,

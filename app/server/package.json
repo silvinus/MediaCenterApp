@@ -6,6 +6,7 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
+    "dlnanow": "^1.0.1",
     "errorhandler": "^1.5.0",
     "exif-parser": "^0.1.12",
     "express": "^4.15.3",
@@ -14,6 +15,7 @@
     "method-override": "^2.3.9",
     "morgan": "^1.8.2",
     "nedb": "^1.8.0",
+    "nodecast-js": "^1.0.3",
     "reflect-metadata": "^0.1.10",
     "util-extend": "^1.0.3"
   },

@@ -1,0 +1,9 @@
+Hello World ! {{movieImdbId}}
+
+<select [(ngModel)]="selectedDevice">
+    <option *ngFor="let d of devices | async" [ngValue]="d">{{d.name}}</option>
+</select>
+
+{{selectedDevice}}
+
+<button (click)="playOn()">Play movie</button>

@@ -6,7 +6,7 @@ import * as path from "path";
 import errorHandler = require("errorHandler");
 import methodOverride = require("method-override");
 import { StaticRoute } from "./routes/static";
-import { AppRoute } from "./routes/application";
+import { IRoute } from "./routes/route";
 import ROUTE_TYPE from "./routes/route"
 import container from "./IoC/inversify.config";
 
@@ -46,13 +46,12 @@ export class Server {
 
     //add routes
     this.routes(
-      container.get<AppRoute>(ROUTE_TYPE.App)
+      container.getAll<IRoute>(ROUTE_TYPE.App)
     );
 
     //add api
     this.api();
   }
-
   /**
    * Create REST API routes
    *
@@ -115,16 +114,16 @@ export class Server {
    * @class Server
    * @method api
    */
-  public routes(appRoutes: AppRoute) {
+  public routes(routes: IRoute[]) {
     let router: express.Router;
     router = express.Router();
 
     //StaticRoute
-    StaticRoute.create(router);
+    // StaticRoute.create(router);
     
     //rest app route
     //AppRoute.create(router);
-    appRoutes.configure(router);
+    routes.forEach(r => r.configure(router));
 
     //use router middleware
     this.app.use(router);
