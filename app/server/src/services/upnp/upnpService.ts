@@ -45,7 +45,7 @@ export class DefaultUpnpService implements IUpnpService {
                 console.log(err);
             });
         
-            // console.log(this.devices()); // list of currently discovered devices
+            console.log(this.devices()); // list of currently discovered devices
         });
         
         this._nodecast.start();
@@ -58,7 +58,7 @@ export class DefaultUpnpService implements IUpnpService {
                              .map(w => new Device(w.name, w.host, w));
     }
     playOn(device: Device, url: String): void {
-        // const url = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4';
+        const urlTest = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4';
         const timestamp = 60; // in seconds
         device.wrap.play(url, timestamp);
     }

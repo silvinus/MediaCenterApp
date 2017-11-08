@@ -18,7 +18,6 @@ import { IUpnpService } from "../services/upnp/upnpService";
  */
 @injectable()
 export class AppRoute implements IRoute {
-
   private readonly fsTools: IFileSystem;
   private readonly httpUtils: IHTTPUtils;
   private readonly collection: IDatabase;
@@ -57,7 +56,7 @@ export class AppRoute implements IRoute {
     router.get(this.APP_BASE_URL + "/scan", (req: Request, res: Response, next: NextFunction) => {
       this.scan(req, res, next);
     });
-    router.get(this.APP_BASE_URL + "/movie/:id/stream", (req: Request, res: Response, next: NextFunction) => {
+    router.get(this.APP_BASE_URL + "/movie/:id/stream/*", (req: Request, res: Response, next: NextFunction) => {
       this.collection.find({'_metadata._imdbId': +req.params.id }).then(resp => {
         let result = resp[0] || undefined;
         if(!result) {
