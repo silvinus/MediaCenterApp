@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Component } from '@angular/core';
+import { NgModule, Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpModule  } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { MoviesListComponent } from './components/movies.component';
 import { MovieDetailComponent } from './components/movies.detail.component';
 import { MovieService } from './services/movies.service';
 import { UpnpService } from './services/upnp.service';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 // import { slideInDownAnimation } from './animations/animations'
 
 @NgModule({
@@ -29,9 +30,12 @@ import { UpnpService } from './services/upnp.service';
       { path: '**', component: MoviesListComponent }
     ], {useHash: true, enableTracing: true}),
     MaterialModule,
-    FormsModule
+    FormsModule,
+    MDBBootstrapModule.forRoot()
+
     // slideInDownAnimation
   ],
+  schemas: [ NO_ERRORS_SCHEMA ],
   providers: [MovieService, UpnpService],
   bootstrap: [AppComponent]
 })
