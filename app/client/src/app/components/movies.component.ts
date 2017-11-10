@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ParamMap } from '@angular/router';
 
 // import { Movie } from '../../../../server/src/entity/movie';
 import { MovieService } from '../services/movies.service';
