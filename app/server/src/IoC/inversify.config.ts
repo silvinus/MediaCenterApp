@@ -1,11 +1,10 @@
 import { Container } from "inversify";
 import UTILS from "../utils/toolsType";
-import CONST from "./constantes";
 import { FileSystemUtil, IFileSystem } from "../utils/fileSystemUtils";
 import { HTTPUtils, IHTTPUtils } from "../utils/httpUtils";
-import { IDatabase, Database } from "../services/data/database";
+import { IMovies, MoviesRepository } from "../services/data/movies";
+import { ISettings, SettingsRepository } from "../services/data/settings";
 import { IRoute } from "../routes/route";
-import ROUTE_TYPE from "../routes/route";
 import { AppRoute } from "../routes/application";
 import { IMetadataExtractor, IMetadataExtractorExecutor, MetadataExtractorExecutor } from "../metadataExtractor/metadataExtractor";
 import { TheMovieDatabaseMetadataExtractor } from "../metadataExtractor/theMovieDatabase";
@@ -14,18 +13,22 @@ import { TitleFromFileExtractor } from "../metadataExtractor/titleFromFileExtrac
 import { IUpnpService, DefaultUpnpService } from "../services/upnp/upnpService";
 import { UpnpRoute } from "../routes/upnpRoutes";
 import { StaticRoute } from "../routes/static";
+import { SettingsRoute } from "../routes/settings";
+let CONST = require("../IoC/constantes");
 
 var container = new Container();
-container.bind<String>(CONST.dbPath).toConstantValue("./.mediacenter/db/mediacenter");
-container.bind<IDatabase>("movies").to(Database).inSingletonScope();
+
+container.bind<IMovies>("movies").to(MoviesRepository).inSingletonScope();
+container.bind<ISettings>("settings").to(SettingsRepository).inSingletonScope();
 
 container.bind<IFileSystem>(UTILS.FsUTils).to(FileSystemUtil);
 container.bind<IHTTPUtils>(UTILS.HTTPUtils).to(HTTPUtils);
 
 //routes
-container.bind<IRoute>(ROUTE_TYPE.App).to(StaticRoute);
-container.bind<IRoute>(ROUTE_TYPE.App).to(AppRoute);
-container.bind<IRoute>(ROUTE_TYPE.App).to(UpnpRoute);
+container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(StaticRoute);
+container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(AppRoute);
+container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(UpnpRoute);
+container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(SettingsRoute);
 
 // Extractor executor
 container.bind<IMetadataExtractorExecutor>("extractorsExecutor").to(MetadataExtractorExecutor);

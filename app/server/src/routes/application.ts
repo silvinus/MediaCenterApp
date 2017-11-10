@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseRoute, IRoute } from "./route";
+import { IRoute } from "./route";
 import { inject, multiInject, injectable } from "inversify";
-import { IDatabase } from "../services/data/database"
+import { IMovies } from "../services/data/movies"
 import { IFileSystem } from "../utils/fileSystemUtils";
 import { IHTTPUtils } from "../utils/httpUtils";
 import TOOLS from "../utils/toolsType"
@@ -20,7 +20,7 @@ import { IUpnpService } from "../services/upnp/upnpService";
 export class AppRoute implements IRoute {
   private readonly fsTools: IFileSystem;
   private readonly httpUtils: IHTTPUtils;
-  private readonly collection: IDatabase;
+  private readonly collection: IMovies;
   private readonly executor: IMetadataExtractorExecutor;
   readonly APP_BASE_URL = "/app";
 
@@ -33,7 +33,7 @@ export class AppRoute implements IRoute {
   constructor(
     @inject(TOOLS.FsUTils) fsTools: IFileSystem,
     @inject(TOOLS.HTTPUtils) httpUtils: IHTTPUtils,
-    @inject("movies") collection: IDatabase,
+    @inject("movies") collection: IMovies,
     @inject("extractorsExecutor") executor: IMetadataExtractorExecutor, 
     @inject("upnp") upnpService: IUpnpService
   ) {
@@ -67,6 +67,7 @@ export class AppRoute implements IRoute {
     });
   }
 
+  //https://www.npmjs.com/package/fs-explorer
   public scan(req: Request, res: Response, next: NextFunction) {
     let allPromise: Promise<any>[] = new Array();
     let allowedExtension: string[] = ['avi', 'mkv', 'mp4'];

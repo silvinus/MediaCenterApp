@@ -7,8 +7,8 @@ import errorHandler = require("errorHandler");
 import methodOverride = require("method-override");
 import { StaticRoute } from "./routes/static";
 import { IRoute } from "./routes/route";
-import ROUTE_TYPE from "./routes/route"
 import container from "./IoC/inversify.config";
+let CONST = require("./IoC/constantes");
 
 /**
  * The server.
@@ -46,7 +46,7 @@ export class Server {
 
     //add routes
     this.routes(
-      container.getAll<IRoute>(ROUTE_TYPE.App)
+      container.getAll<IRoute>(CONST.ROUTES_COMPONENTS)
     );
 
     //add api

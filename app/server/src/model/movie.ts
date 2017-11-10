@@ -1,5 +1,6 @@
 import { metadata } from "../metadataExtractor/metadataExtractor";
 
+// TODO: Review class and remove private and getter. Simplify it
 export class Movie {
     public static fromMetadata(meta: metadata.Metadata): Movie {
         let m = new Movie();

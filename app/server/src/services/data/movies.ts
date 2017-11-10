@@ -1,10 +1,10 @@
 import Datastore = require("nedb");
 import { inject, injectable } from "inversify";
-import CONST from "../../IoC/constantes"
 import { Movie } from "../../model/movie"
 import { metadata } from "../../metadataExtractor/metadataExtractor"
+import { configureDatastore } from "./dataStoreDecorator"
 
-export interface IDatabase {
+export interface IMovies {
     find(query: any): Promise<Array<Movie>>;
     movies(): Promise<Array<Movie>>;
     insertMovie(movie: Movie): void;
@@ -12,26 +12,14 @@ export interface IDatabase {
 }
 
 @injectable()
-export class Database implements IDatabase {
+export class MoviesRepository implements IMovies {
+
+    @configureDatastore('mediacenter')
     private readonly instance;
 
-    constructor(
-        @inject(CONST.dbPath) dbPath: String
-    ) {
-        this.instance = new Datastore({ 
-            filename: dbPath, 
-            autoload: true,
-            beforeDeserialization: s => {
-                return s;
-            },
-            afterSerialization: s => {
-                return s;
-            }});
+    constructor() {
         // Using a unique constraint with the index
-        this.instance.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) {
-        });
-        // this.instance.ensureIndex({ fieldName: '_imdbId', unique: true }, function (err) {
-        // });
+        this.instance.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) { });
     }
 
     private executeQuery(query: any): Promise<Array<Movie>> {

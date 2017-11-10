@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseRoute, IRoute } from "./route";
+import { IRoute } from "./route";
 import { inject, multiInject, injectable } from "inversify";
 import { IUpnpService } from "../services/upnp/upnpService";
 import { IHTTPUtils } from "../utils/httpUtils";
