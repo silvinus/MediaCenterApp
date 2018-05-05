@@ -80,3 +80,15 @@ gulp.task('watch', () => {
   gulp.watch('app/client/src/**/*.*', [ 'clientscripts' ]);
   gulp.watch('app/server/src/**/*.*', [ 'serverscripts' ]);
 });
+
+var Config = function(g) {
+  var gulp = function() {
+    return g;
+  }
+
+  return {
+    gulp: gulp
+}
+}
+
+module.exports = new Config(gulp);

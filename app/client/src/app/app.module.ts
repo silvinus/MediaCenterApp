@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@angular/material';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 import { AppComponent } from './app.component';
 import { MoviesListComponent } from './components/movies.component';
@@ -34,7 +34,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
       { path: 'settings', component: SettingsComponent},
       { path: '**', component: MoviesListComponent }
     ], {useHash: true, enableTracing: true}),
-    MaterialModule,
+    MatGridListModule,
     FormsModule,
     MDBBootstrapModule.forRoot()
 

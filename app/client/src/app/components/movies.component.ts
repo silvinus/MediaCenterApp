@@ -7,7 +7,7 @@ import { MovieService } from '../services/movies.service';
 import 'rxjs/add/operator/switchMap';
 
 @Component({
-  selector: 'movies-list',
+  selector: 'app-movies-list',
   templateUrl: '../templates/movies.list.component.html',
   styleUrls: ['../styles/movies.list.component.scss']
 })

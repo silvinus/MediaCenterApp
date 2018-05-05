@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'media-home',
+  selector: 'app-media-home',
   templateUrl: '../templates/home.component.html',
   styleUrls: []
 })

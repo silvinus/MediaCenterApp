@@ -9,7 +9,7 @@ import { UpnpService, Device } from '../services/upnp.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'movie-detail',
+  selector: 'app-movie-detail',
   templateUrl: '../templates/movies.detail.component.html',
   styleUrls: ['../styles/movies.detail.component.scss'],
   // make fade in animation available to this component

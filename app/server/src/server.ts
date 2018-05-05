@@ -70,8 +70,8 @@ export class Server {
    */
   public config() {
     //add static paths
-    console.log('Static path', "app/client/dist");
-    console.log('Static path', "node_modules");
+    // console.log('Static path', "app/client/dist");
+    // console.log('Static path', "node_modules");
 
     // this.app.use(express.static(path.join(__dirname, "public")));
     this.app.use(express.static("app/client/dist"));

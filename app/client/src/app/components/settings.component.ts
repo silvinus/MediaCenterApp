@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'media-settings',
+  selector: 'app-media-settings',
   templateUrl: '../templates/settings.component.html',
   styleUrls: []
 })

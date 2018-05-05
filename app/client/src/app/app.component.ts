@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MovieDetailComponent } from "./components/movies.detail.component"
+import { MovieDetailComponent } from './components/movies.detail.component';
 import { Router } from '@angular/router';
 
 @Component({
