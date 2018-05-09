@@ -49,22 +49,24 @@ export class SlaveRoute implements IRoute {
   }
 
   public configure(router: Router) {
-    //log
-    console.log("[SlaveRoute::create] Creating slave app routes.");
+    if(this.settings.isSlave()) {
+      //log
+      console.log("[SlaveRoute::create] Creating slave app routes.");
 
-    // slave route
-    router.post(this.APP_BASE_URL + "/scan/:name", (req: Request, res: Response, next: NextFunction) => {
-      this.scan(req, res, next);
-    });
-    router.get(this.APP_BASE_URL + "/movie/:id/stream/*", (req: Request, res: Response, next: NextFunction) => {
-      this.collection.find({'metadata.imdbId': +req.params.id }).then(resp => {
-        let result = resp[0] || undefined;
-        if(!result) {
-          res.send(404);
-        }
-        res.sendFile(result.directory + '\\' +result.fileName.toString());
+      // slave route
+      router.post(this.APP_BASE_URL + "/scan/:name", (req: Request, res: Response, next: NextFunction) => {
+        this.scan(req, res, next);
       });
-    });
+      router.get(this.APP_BASE_URL + "/movie/:id/stream/*", (req: Request, res: Response, next: NextFunction) => {
+        this.collection.find({'metadata.imdbId': +req.params.id }).then(resp => {
+          let result = resp[0] || undefined;
+          if(!result) {
+            res.send(404);
+          }
+          res.sendFile(result.directory + '\\' +result.fileName.toString());
+        });
+      });
+    }
   }
 
   public async scan(req: Request, res: Response, next: NextFunction) {

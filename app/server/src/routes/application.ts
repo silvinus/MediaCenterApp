@@ -53,39 +53,41 @@ export class AppRoute implements IRoute {
 
   public configure(router: Router) {
     //log
-    console.log("[AppRoute::create] Creating app routes.");
+    if(this.settings.isMaster()) {
+      console.log("[AppRoute::create] Creating app routes.");
 
-    router.get(this.APP_BASE_URL + "/movies", (req: Request, res: Response, next: NextFunction) => {
-      this.movies(req, res, next);
-    });
-    router.get(this.APP_BASE_URL + "/movie/:id", (req: Request, res: Response, next: NextFunction) => {
-      this.movie(req, res, next);
-    });
-    router.post(this.APP_BASE_URL + "/sync", (req: Request, res: Response, next: NextFunction) => {
-      this.sync(req, res, next);
-    });
+      router.get(this.APP_BASE_URL + "/movies", (req: Request, res: Response, next: NextFunction) => {
+        this.movies(req, res, next);
+      });
+      router.get(this.APP_BASE_URL + "/movie/:id", (req: Request, res: Response, next: NextFunction) => {
+        this.movie(req, res, next);
+      });
+      router.post(this.APP_BASE_URL + "/sync", (req: Request, res: Response, next: NextFunction) => {
+        this.sync(req, res, next);
+      });
+    }
 
-    var fileSystem = require('fs');
-    router.get(this.APP_BASE_URL + "/movie/:id/stream/*", async (req: Request, res: Response, next: NextFunction) => {
-      let resp = await this.collection.find({'metadata.imdbId': +req.params.id });
+    // var fileSystem = require('fs');
+    // router.get(this.APP_BASE_URL + "/movie/:id/stream/*", async (req: Request, res: Response, next: NextFunction) => {
+    //   let resp = await this.collection.find({'metadata.imdbId': +req.params.id });
       
-      let result = resp[0] || undefined;
-      if(!result) {
-        res.send(404);
-      }
+    //   let result = resp[0] || undefined;
+    //   if(!result) {
+    //     res.send(404);
+    //   }
 
-      let path = result.directory + '\\' +result.fileName.toString();
-      // let stat = fileSystem.fstatSync(path);
-      res.writeHead(200, {
-        'Content-Length': 3000000
-      })
-      var readStream = fileSystem.createReadStream(path);
-      readStream.pipe(res);
+    //   let path = result.directory + '\\' +result.fileName.toString();
+    //   // let stat = fileSystem.fstatSync(path);
+    //   res.writeHead(200, {
+    //     'Content-Length': 3000000
+    //   })
+    //   var readStream = fileSystem.createReadStream(path);
+    //   readStream.pipe(res);
 
-      // res.sendFile(result.directory + '\\' +result.fileName.toString(), err => {
-      //   console.log(err);
-      // });
-    });
+    //   // res.sendFile(result.directory + '\\' +result.fileName.toString(), err => {
+    //   //   console.log(err);
+    //   // });
+    // });
   }
 
   public sync(req: Request, res: Response, next: NextFunction) {

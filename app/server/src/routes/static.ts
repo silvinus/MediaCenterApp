@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { IRoute } from './route';
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
+import { ISettings } from "../services/data/settings";
 
 
 /**
@@ -11,12 +12,14 @@ import { injectable } from "inversify";
 @injectable()
 export class StaticRoute implements IRoute {
   configure(router: Router) {
+    if(this.settings.isMaster()) {
     console.log("[StaticRoute::create] Creating index route.");
     
       //add home page route
       router.get("/", (req: Request, res: Response, next: NextFunction) => {
         this.index(req, res, next);
       });
+    }
   }
 
   /**
@@ -25,7 +28,7 @@ export class StaticRoute implements IRoute {
    * @class IndexRoute
    * @constructor
    */
-  constructor() {
+  constructor(@inject("settings") private settings: ISettings) {
   }
 
   /**

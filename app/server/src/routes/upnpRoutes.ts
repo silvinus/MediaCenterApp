@@ -20,28 +20,30 @@ export class UpnpRoute implements IRoute {
     }
 
     configure(router: Router) {
-        console.log("[UpnpRoute::create] Creating upnp routes.");
+        if(this.settings.isMaster()) {
+            console.log("[UpnpRoute::create] Creating upnp routes.");
 
-        router.get(this.APP_BASE_URL + "/devices", (req: Request, res: Response, next: NextFunction) => {
-            this._httpUtils.configureJSONResponse(req, res, this._service.devices());
-        });
+            router.get(this.APP_BASE_URL + "/devices", (req: Request, res: Response, next: NextFunction) => {
+                this._httpUtils.configureJSONResponse(req, res, this._service.devices());
+            });
 
-        router.post(this.APP_BASE_URL + "/play", async (req: Request, res: Response, next: NextFunction) => {
-            let params = req.body;
-            let device = this._service.devices()
-                                      .filter(w => w.address === params.device._address && w.name === params.device._name);
-            if(device.length == 0) {
-                res.send(404);
-            }
-            let sett = (await this.settings.settings())
-                                        .slaves.filter(s => s.name === params.movie.host);
-            if(sett.length == 0) {
-                res.send(404);
-            }        
+            router.post(this.APP_BASE_URL + "/play", async (req: Request, res: Response, next: NextFunction) => {
+                let params = req.body;
+                let device = this._service.devices()
+                                        .filter(w => w.address === params.device._address && w.name === params.device._name);
+                if(device.length == 0) {
+                    res.send(404);
+                }
+                let sett = (await this.settings.settings())
+                                            .slaves.filter(s => s.name === params.movie.host);
+                if(sett.length == 0) {
+                    res.send(404);
+                }        
 
-            let streamUrl = 'http://' + sett[0].ip + ":" + sett[0].port + "/app/movie/" + params.movie.metadata.imdbId + "/stream/" + encodeURIComponent(params.movie.fileName);
-            this._service.playOn(device[0], streamUrl);
-            console.log(req);
-        });
+                let streamUrl = 'http://' + sett[0].ip + ":" + sett[0].port + "/app/movie/" + params.movie.metadata.imdbId + "/stream/" + encodeURIComponent(params.movie.fileName);
+                this._service.playOn(device[0], streamUrl);
+                console.log(req);
+            });
+        }
     }
 }
