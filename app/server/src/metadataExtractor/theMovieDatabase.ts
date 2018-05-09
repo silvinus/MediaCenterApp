@@ -9,21 +9,32 @@ export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
     // TODO: export on settings
     private readonly _apiKey: String = "api_key=8c46bd4597983f80f3281bcb4568e066";
     private readonly _conf: Promise<any>;
+    private readonly promises: Array<Promise<void>>;
+    private readonly queue: Array<metadata.Builder>;
 
 	constructor() {
+        this.promises = [];
+        this.queue = [];
+
         this._conf = this.configuration().then((conf) => {
                             return conf;
                         });
+        setInterval(() => {
+            if(this.queue.length > 0) {
+                this.queue.slice(0, 35)
+                          .forEach(w => this.extract(w));
+            }
+        }, 5000)
 	}
     
 
-    extract(builder: metadata.Builder): Promise<void> {
+    public async extract(builder: metadata.Builder): Promise<void> {
         // first find configurations
         if(builder.imageUrl) {
             return Promise.resolve();
         }
 
-        return new Promise((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
             this._conf.then((conf) => {
                     const _conf = conf;
                     // finally search movie
@@ -46,6 +57,18 @@ export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
                     }, e => reject(e));
                 }, e => reject(e));
         });
+
+        if(this.promises.length > 35) {
+            await Promise.all(this.promises)
+                         .then(_ => this.promises.splice(0));
+
+            this.queue.push(builder);
+        }
+        else {
+            this.promises.push(promise);
+        }
+
+        return promise;
     }
 
     private configuration(): Promise<any> {
