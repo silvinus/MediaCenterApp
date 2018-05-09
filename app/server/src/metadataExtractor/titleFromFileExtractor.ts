@@ -10,8 +10,10 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
             tmp = this.supressUnexpectedChar(tmp);
             tmp = this.supressYear(tmp);
             tmp = this.supressKnowWords(tmp);
+            console.log("Finded title : " + tmp);
             builder.title = tmp;
         }
+        console.log("Title not extracted. already present : " + builder.title);
 
         return Promise.resolve();
     }
@@ -27,7 +29,7 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
     }
 
     private supressYear(entry: string): string {
-        let reg = new RegExp(/(19|20)\d{2}/);
+        let reg = new RegExp(/(19|20|21)\d{2}/);
         let match = reg.exec(entry);
         if(match != null) {
             return entry.substr(0, entry.indexOf(match[1])).trim();

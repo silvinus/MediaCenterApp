@@ -4,11 +4,11 @@
     [class.hover]="hover === true"
     (mouseenter)="hover = true"
     (mouseleave)="hover = false">
-    <img [alt]="movie._metadata._imageUrl" [src]="movie._metadata._imageUrl">
+    <img [alt]="movie.metadata.imageUrl" [src]="movie.metadata.imageUrl">
     <mat-grid-tile-footer>
-      <h3 md-line>{{movie._metadata._title}}</h3>
-      <span md-line>{{movie._fileName}}</span>
-      <span md-line>{{movie._directory}}</span>
+      <h3 md-line>{{movie.metadata.title}}</h3>
+      <span md-line>{{movie.fileName}}</span>
+      <span md-line>{{movie.directory}}</span>
       <md-icon>star_border</md-icon>
     </mat-grid-tile-footer>
   </mat-grid-tile>

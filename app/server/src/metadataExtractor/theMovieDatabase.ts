@@ -84,19 +84,23 @@ export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
 
     private sendRequest(options, callback): void {
         var req = http.request(options, function (res) {
-                var chunks = [];
+                    var chunks = [];
 
-                res.on("data", function (chunk) {
-                    chunks.push(chunk);
+                    res.on("data", function (chunk) {
+                        chunks.push(chunk);
+                    });
+
+                    res.on("end", function () {
+                        var body = Buffer.concat(chunks);
+                        callback(JSON.parse(body.toString()));
+                    });
                 });
 
-                res.on("end", function () {
-                    var body = Buffer.concat(chunks);
-                    callback(JSON.parse(body.toString()));
-                });
-            });
+        req.on('error', function(err) {
+            console.log(err);
+        });
 
-            req.write("{}");
-            req.end();
+        req.write("{}");
+        req.end();
     }
 }

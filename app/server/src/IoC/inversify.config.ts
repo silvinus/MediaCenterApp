@@ -14,11 +14,14 @@ import { IUpnpService, DefaultUpnpService } from "../services/upnp/upnpService";
 import { UpnpRoute } from "../routes/upnpRoutes";
 import { StaticRoute } from "../routes/static";
 import { SettingsRoute } from "../routes/settings";
+import { ISlave, SlaveService } from "../services/slave/slaveService";
+import { SlaveRoute } from "../routes/slaveApplication";
 let CONST = require("../IoC/constantes");
 
 var container = new Container();
 
-container.bind<IMovies>("movies").to(MoviesRepository).inSingletonScope();
+container.bind<IMovies>("movies").toDynamicValue(() => new MoviesRepository(false)).inSingletonScope();
+container.bind<IMovies>("slavemovies").toDynamicValue(() => new MoviesRepository(true)).inSingletonScope();
 container.bind<ISettings>("settings").to(SettingsRepository).inSingletonScope();
 
 container.bind<IFileSystem>(UTILS.FsUTils).to(FileSystemUtil);
@@ -29,6 +32,7 @@ container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(StaticRoute);
 container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(AppRoute);
 container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(UpnpRoute);
 container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(SettingsRoute);
+container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(SlaveRoute);
 
 // Extractor executor
 container.bind<IMetadataExtractorExecutor>("extractorsExecutor").to(MetadataExtractorExecutor);
@@ -40,5 +44,8 @@ container.bind<IMetadataExtractor>("extractors").to(TheMovieDatabaseMetadataExtr
 
 // upnp service
 container.bind<IUpnpService>("upnp").to(DefaultUpnpService).inSingletonScope();
+
+// slave service for communication
+container.bind<ISlave>("slave").to(SlaveService).inSingletonScope();
 
 export default container;

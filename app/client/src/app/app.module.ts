@@ -14,6 +14,7 @@ import { HomeComponent } from './components/home.components';
 import { SettingsComponent } from './components/settings.component';
 
 import { MovieService } from './services/movies.service';
+import { SettingService } from './services/settings.service';
 import { UpnpService } from './services/upnp.service';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 // import { slideInDownAnimation } from './animations/animations'
@@ -41,7 +42,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
     // slideInDownAnimation
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [MovieService, UpnpService],
+  providers: [MovieService, UpnpService, SettingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

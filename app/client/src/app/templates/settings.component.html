@@ -1,1 +1,17 @@
-Settings !
+<div>
+    <div *ngFor="let slave of slaves; let i = index">
+
+            Name: <input [(ngModel)]="slave.name" name="slave.name-{{i}}" />
+            Ip: <input [(ngModel)]="slave.ip" name="slave.ip-{{i}}" />
+            Port: <input [(ngModel)]="slave.port" name="slave.port-{{i}}" />
+            <div *ngFor="let path of slave.scanPaths; let i = index; trackBy: customTrackBy">
+                <input [(ngModel)]="slave.scanPaths[i]" name="input-{{i}}" />
+            </div>
+
+        <button (click)="slave.scanPaths.push('')">Add new path</button>
+    </div>
+
+    <button (click)="validate()">Save</button>
+    <button (click)="sync()">Synchronize</button>
+    <button (click)="addSlave()">Add slave</button>
+</div>

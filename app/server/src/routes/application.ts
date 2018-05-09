@@ -9,6 +9,8 @@ import "reflect-metadata";
 import { Movie } from "../model/movie";
 import { IMetadataExtractorExecutor, metadata } from "../metadataExtractor/metadataExtractor";
 import { IUpnpService } from "../services/upnp/upnpService";
+import { ISettings } from "../services/data/settings";
+import { ISlave, SlaveService, SlaveReport } from "../services/slave/slaveService";
 
 
 /**
@@ -22,6 +24,8 @@ export class AppRoute implements IRoute {
   private readonly httpUtils: IHTTPUtils;
   private readonly collection: IMovies;
   private readonly executor: IMetadataExtractorExecutor;
+  private readonly settings: ISettings;
+  private readonly slaveService: ISlave;
   readonly APP_BASE_URL = "/app";
 
   /**
@@ -35,12 +39,16 @@ export class AppRoute implements IRoute {
     @inject(TOOLS.HTTPUtils) httpUtils: IHTTPUtils,
     @inject("movies") collection: IMovies,
     @inject("extractorsExecutor") executor: IMetadataExtractorExecutor, 
-    @inject("upnp") upnpService: IUpnpService
+    @inject("upnp") upnpService: IUpnpService,
+    @inject("settings") settings: ISettings,
+    @inject("slave") slaveService: ISlave
   ) {
     this.fsTools = fsTools;
     this.httpUtils = httpUtils;
     this.collection = collection;
     this.executor = executor;
+    this.settings = settings;
+    this.slaveService = slaveService;
   }
 
   public configure(router: Router) {
@@ -53,57 +61,51 @@ export class AppRoute implements IRoute {
     router.get(this.APP_BASE_URL + "/movie/:id", (req: Request, res: Response, next: NextFunction) => {
       this.movie(req, res, next);
     });
-    router.get(this.APP_BASE_URL + "/scan", (req: Request, res: Response, next: NextFunction) => {
-      this.scan(req, res, next);
+    router.post(this.APP_BASE_URL + "/sync", (req: Request, res: Response, next: NextFunction) => {
+      this.sync(req, res, next);
     });
-    router.get(this.APP_BASE_URL + "/movie/:id/stream/*", (req: Request, res: Response, next: NextFunction) => {
-      this.collection.find({'_metadata._imdbId': +req.params.id }).then(resp => {
-        let result = resp[0] || undefined;
-        if(!result) {
-          res.send(404);
-        }
-        res.sendFile(result.directory + '\\' +result.fileName.toString());
-      });
+
+    var fileSystem = require('fs');
+    router.get(this.APP_BASE_URL + "/movie/:id/stream/*", async (req: Request, res: Response, next: NextFunction) => {
+      let resp = await this.collection.find({'metadata.imdbId': +req.params.id });
+      
+      let result = resp[0] || undefined;
+      if(!result) {
+        res.send(404);
+      }
+
+      let path = result.directory + '\\' +result.fileName.toString();
+      // let stat = fileSystem.fstatSync(path);
+      res.writeHead(200, {
+        'Content-Length': 3000000
+      })
+      var readStream = fileSystem.createReadStream(path);
+      readStream.pipe(res);
+
+      // res.sendFile(result.directory + '\\' +result.fileName.toString(), err => {
+      //   console.log(err);
+      // });
     });
   }
 
-  //https://www.npmjs.com/package/fs-explorer
-  public scan(req: Request, res: Response, next: NextFunction) {
+  public sync(req: Request, res: Response, next: NextFunction) {
     let allPromise: Promise<any>[] = new Array();
-    let allowedExtension: string[] = ['avi', 'mkv', 'mp4'];
 
-    this.fsTools.files("D:\\temp")
-        .filter(w => allowedExtension.indexOf(w.extension) != -1)
-        .forEach(file => {
-          allPromise.push(this.collection.find({ _fileName: file.fileName })
-                    .then(movies => {
-                      if(movies.length == 0 || movies[0].metadata.title == ''
-                          || movies[0].metadata.imageUrl == ''
-                          || !movies[0].host) { 
-                        if(!movies[0].host) {
-                          return new Promise((resolve) => {
-                            movies[0].host = "localhost";
-                            this.collection.updateMovie(movies[0].fileName.toString(), movies[0]);
-                            resolve();
-                          });
-                        }
+    this.settings.settings()
+                 .then(all => {
+                    all.slaves.forEach(s => {
+                      this.slaveService.sync(s)
+                                      .then(result => {
+                                        result.toRemove.forEach(element => {
+                                          this.collection.remove(element.fileName.toString());
+                                        });
+                                        result.toAdd.forEach(element => {
+                                          this.collection.insertMovie(element);
+                                        });
+                                      })
 
-                        let builder = metadata.Metadata.builder();
-                        builder.fileName = file.fileName.toString();
-                        builder.directory = file.directory.toString();
-                        builder.host = "localhost"; //TODO
-
-                        return this.executor.execute(builder)
-                                            .then((final) => {
-                                                let movie = Movie.fromMetadata(final.build());
-                                                if(movies.length > 0) {
-                                                    return this.collection.updateMovie(movies[0].fileName.toString(), movie);
-                                                }
-                                                return this.collection.insertMovie(movie);
-                                            }, err => err);
-                      }
-                    }, err => err));
-        });
+                    });
+                 });
 
         Promise.all(allPromise)
                 .then(
@@ -122,7 +124,7 @@ export class AppRoute implements IRoute {
 
   public movie(req: Request, res: Response, next: NextFunction) {
     console.log(req);
-    this.collection.find({'_metadata._imdbId': +req.params.id }).then(resp => {
+    this.collection.find({'metadata.imdbId': +req.params.id }).then(resp => {
       let result = resp[0] || undefined;
       this.httpUtils.configureJSONResponse(req, res, result);
     });

@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router, ParamMap } from '@angular/router';
-
-// import { Movie } from '../../../../server/src/entity/movie';
 import { MovieService } from '../services/movies.service';
-import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-movies-list',
@@ -25,6 +22,6 @@ export class MoviesListComponent implements OnInit {
     }
 
     onSelect(movie: any) {
-        this.router.navigate(['/movie', movie._metadata._imdbId]);
+        this.router.navigate(['/movie', movie.metadata.imdbId]);
     }
 }

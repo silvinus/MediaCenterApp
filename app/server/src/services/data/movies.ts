@@ -9,17 +9,28 @@ export interface IMovies {
     movies(): Promise<Array<Movie>>;
     insertMovie(movie: Movie): void;
     updateMovie(key: string, update: Movie): void;
+    remove(fileName: string): void;
 }
 
 @injectable()
 export class MoviesRepository implements IMovies {
+    private instance: any;
 
     @configureDatastore('mediacenter')
-    private readonly instance;
+    private readonly master;
+    @configureDatastore('mediacenterslave')
+    private readonly slave;
 
-    constructor() {
+    constructor(private slaveMode: boolean) {
         // Using a unique constraint with the index
-        this.instance.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) { });
+        this.master.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) { });
+        this.slave.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) { });
+        if(this.slaveMode) {
+            this.instance = this.slave;
+        }
+        else {
+            this.instance = this.master;
+        }
     }
 
     private executeQuery(query: any): Promise<Array<Movie>> {
@@ -28,17 +39,7 @@ export class MoviesRepository implements IMovies {
                 if(err) {
                     reject(err);
                 }
-                let all: Array<Movie> = [];
-                docs.forEach(e => {
-                    // TODO: Find a better way, a typed way...
-                    var t = new Movie();
-                    t.directory = e._directory;
-                    t.fileName = e._fileName;
-                    t.host = e._host;
-                    t.metadata = metadata.Metadata.fromObject(e._metadata);
-                    all.push(t);
-                });
-                resolve(all);
+                resolve(docs);
             }) 
         });
     }
@@ -52,12 +53,16 @@ export class MoviesRepository implements IMovies {
     }
 
     public insertMovie(movie: Movie): void {
-        this.instance.insert(movie, err => err ? console.error(err) : undefined);
+        this.instance.insert(movie, err => err ? console.error(err) : console.log("Movie inserted " + movie.metadata.title));
     }
 
     public updateMovie(key: string, update: Movie): void {
-        this.instance.update({ _fileName: key }, update, {}, (err, numReplaced) => { 
+        this.instance.update({ fileName: key }, update, {}, (err, numReplaced) => { 
             console.log(numReplaced, "document replace")
         })
+    }
+
+    public remove(fileName: string): void {
+        this.instance.remove({ fileName: fileName });
     }
 }

@@ -20,5 +20,12 @@ export class SettingsRoute implements IRoute {
                 res.json(resp);
               });
           });
+
+          router.post(CONST.BASE_APP_URL + "/settings", (req: Request, res: Response, next: NextFunction) => {
+              console.log(req.body);
+              this.collection.save(req.body).then(resp => {
+                  res.json(resp);
+              });
+          });
     }
 }

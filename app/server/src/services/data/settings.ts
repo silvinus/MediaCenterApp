@@ -5,6 +5,7 @@ import { Settings } from "../../model/settings"
 
 export interface ISettings {
     settings(): Promise<Settings>;
+    save(settings: Settings): Promise<Settings>;
 }
 
 @injectable()
@@ -27,5 +28,21 @@ export class SettingsRepository implements ISettings {
 
     public settings(): Promise<Settings> {
         return this.executeQuery({});
+    }
+
+    public save(settings: Settings): Promise<Settings> {
+        return new Promise((resolve, reject) => {
+            this.instance.find({ key: 'settings' }, (err, docs) => {
+                if(docs.length > 0) {
+                    this.instance.update({ key: 'settings' }, settings, {}, (err, numReplaced) => { 
+                        console.log(numReplaced, "document replace")
+                    });
+                }
+                else {
+                    this.instance.insert(settings);
+                }
+                resolve(settings);
+            })
+        })
     }
 }

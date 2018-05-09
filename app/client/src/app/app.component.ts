@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, ActivatedRoute, UrlSegment } from '@angular/router';
 import { MovieDetailComponent } from './components/movies.detail.component';
 import { Router } from '@angular/router';
 
@@ -13,8 +13,11 @@ export class AppComponent {
   currentMenu: String = 'home';
 
   constructor(
-    private router: Router
-  ) { }
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
+    activatedRoute.url.subscribe((url: any) => this.currentMenu = this.router.url);
+  }
 
   navigate(current: String) {
     this.currentMenu = current;

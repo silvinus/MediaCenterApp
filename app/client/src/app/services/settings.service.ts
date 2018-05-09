@@ -3,31 +3,36 @@ import { Headers, Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { Settings } from '../model/settings';
 
 @Injectable()
-export class MovieService {
+export class SettingService {
     private appUrl = 'app';
 
     constructor(private http: Http) {
     }
 
-    movies(): Observable<any[]> {
-        return this.http.get(this.appUrl + '/movies')
+    settings(): Observable<Settings> {
+        return this.http.get(this.appUrl + '/settings')
                         .map(resp => {
+                            console.log(resp);
                             return resp.json();
                         });
     }
 
-    movie(id: Number): any {
-        return this.http.get(this.appUrl + '/movie/' + id)
+    setting(name: String): any {
+        return this.http.get(this.appUrl + '/setting/' + name)
                         .toPromise()
                         .then(response => response.json())
                         .catch(this.handleError);
     }
 
-    synchronize(): Promise<any> {
-        return this.http.post(this.appUrl + '/sync', {})
-                    .toPromise();
+    save(settings: Settings): Observable<Settings> {
+        return this.http.post(this.appUrl + '/settings', settings)
+                .map(resp => {
+                    console.log(resp);
+                    return resp.json();
+                });
     }
 
     private handleError(error: any): Promise<any> {

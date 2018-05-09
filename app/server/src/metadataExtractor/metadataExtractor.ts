@@ -43,228 +43,70 @@ export namespace metadata {
             return new Builder();
         }
         public static fromObject(obj: any): Metadata {
-            return new Metadata(obj._fileName, obj._directory, obj._host, obj._title,
-                                    obj._subTitle, obj._imageUrl, obj._posterImageUrl,
-                                    obj._overview, obj._imdbId, obj._genres, obj._releaseDate,
-                                    obj._popularity, obj._alternative);
+            return new Metadata(obj.fileName, obj.directory, obj.host, obj.title,
+                                    obj.subTitle, obj.imageUrl, obj.posterImageUrl,
+                                    obj.overview, obj.imdbId, obj.genres, obj.releaseDate,
+                                    obj.popularity, obj.alternative);
         }
-
-        private readonly _fileName: string = "";
-        private readonly _directory: string = "";
-        private readonly _host: string = "";
-        private readonly _title: string = "";
-        private readonly _subTitle: string = "";
-        private readonly _imageUrl: string = "";
-        private readonly _posterImageUrl: string = "";
-        private readonly _overview: string = "";
-        private readonly _imdbId: number;
-        private readonly _genres: number[] = [];
-        private readonly _releaseDate: string = "";
-        private readonly _popularity: number;
-        private readonly _alternative: any[];
+        
+        fileName: string = "";
+        directory: string = "";
+        host: string = "";
+        title: string = "";
+        subTitle: string = "";
+        imageUrl: string = "";
+        posterImageUrl: string = "";
+        overview: string = "";
+        imdbId: number;
+        genres: number[] = [];
+        releaseDate: string = "";
+        popularity: number;
+        alternative: any[];
 
         constructor(fileName: string, directory: string, host: string, title: string, subtitle: string,
                         imageUrl: string, posterImageUrl: string, overview: string, imdbId: number,
                         genres: number[], releaseDate: string, popularity: number, alternative: any[]) {
-            this._fileName = fileName;
-            this._directory = directory;
-            this._host = host;
-            this._title = title;
-            this._subTitle = subtitle;
-            this._imageUrl = imageUrl;
-            this._posterImageUrl = posterImageUrl;
-            this._overview = overview;
-            this._imdbId = imdbId;
-            this._genres = genres;
-            this._releaseDate = releaseDate;
-            this._popularity = popularity;
-            this._alternative = alternative;
+            this.fileName = fileName;
+            this.directory = directory;
+            this.host = host;
+            this.title = title;
+            this.subTitle = subtitle;
+            this.imageUrl = imageUrl;
+            this.posterImageUrl = posterImageUrl;
+            this.overview = overview;
+            this.imdbId = imdbId;
+            this.genres = genres;
+            this.releaseDate = releaseDate;
+            this.popularity = popularity;
+            this.alternative = alternative;
         }
-        
-
-        public get fileName(): string  {
-            return this._fileName;
-        }
-            
-        public get directory(): string  {
-            return this._directory;
-        }
-
-        public get host(): string  {
-            return this._host;
-        }
-        
-        public get title(): string  {
-            return this._title;
-        }
-        
-        public get subTitle(): string  {
-            return this._subTitle;
-        }
-        
-        public get imageUrl(): string  {
-            return this._imageUrl;
-        }
-        
-        public get posterImageUrl(): string  {
-            return this._posterImageUrl;
-        }
-
-        public get overview(): string  {
-            return this._overview;
-        }
-
-        public get imdbId(): number {
-            return this._imdbId;
-        }
-
-        public get genres(): number[]  {
-            return this._genres;
-        }
-
-        public get releaseDate(): string  {
-            return this._releaseDate;
-        }
-
-        public get popularity(): number  {
-            return this._popularity;
-        }
-
-        public get alternative(): any[] {
-            return this._alternative;
-        }
-        
     }
 
     export class Builder {
-        private _fileName: string = "";
-        private _directory: string = "";
-        private _host: string = "";
-        private _title: string = "";
-        private _subTitle: string = "";
-        private _imageUrl: string = "";
-        private _posterImageUrl: string = "";
-        private _overview: string = "";
-        private _imdbId: number;
-        private _genres: number[] = [];
-        private _releaseDate: string = "";
-        private _popularity: number = 0;
-        private _alternative: any[];
-
-        public get fileName(): string  {
-            return this._fileName;
-        }
-
-        public set fileName(value: string ) {
-            this._fileName = value;
-        }
-            
-        public get directory(): string  {
-            return this._directory;
-        }
-
-        public set directory(value: string ) {
-            this._directory = value;
-        }
-
-        public get host(): string  {
-            return this._host;
-        }
-
-        public set host(value: string ) {
-            this._host = value;
-        }
-        
-        public get title(): string  {
-            return this._title;
-        }
-
-        public set title(value: string ) {
-            this._title = value;
-        }
-        
-        public get subTitle(): string  {
-            return this._subTitle;
-        }
-
-        public set subTitle(value: string ) {
-            this._subTitle = value;
-        }
-        
-        public get imageUrl(): string  {
-            return this._imageUrl;
-        }
-
-        public set imageUrl(value: string ) {
-            this._imageUrl = value;
-        }
-        
-        public get posterImageUrl(): string  {
-            return this._posterImageUrl;
-        }
-
-        public set posterImageUrl(value: string ) {
-            this._posterImageUrl = value;
-        }
-
-        public get overview(): string  {
-            return this._overview;
-        }
-
-        public set overview(value: string ) {
-            this._overview = value;
-        }
-
-        public get imdbId(): number {
-            return this._imdbId;
-        }
-
-        public set imdbId(value: number) {
-            this._imdbId = value;
-        }
-
-        public get genres(): number[]  {
-            return this._genres;
-        }
-
-        public set genres(value: number[] ) {
-            this._genres = value;
-        }
-
-        public get releaseDate(): string  {
-            return this._releaseDate;
-        }
-
-        public set releaseDate(value: string ) {
-            this._releaseDate = value;
-        }
-
-        public get popularity(): number  {
-            return this._popularity;
-        }
-
-        public set popularity(value: number ) {
-            this._popularity = value;
-        }
-
-        public get alternative(): any[] {
-            return this._alternative;
-        }
-
-        public set alternative(value: any[]) {
-            this._alternative = value;
-        }
+        fileName: string = "";
+        directory: string = "";
+        host: string = "";
+        title: string = "";
+        subTitle: string = "";
+        imageUrl: string = "";
+        posterImageUrl: string = "";
+        overview: string = "";
+        imdbId: number;
+        genres: number[] = [];
+        releaseDate: string = "";
+        popularity: number = 0;
+        alternative: any[];
 
         public build(): Metadata {
-            return new Metadata(this._fileName, 
-                this._directory, 
-                this._host,
-                this._title, 
-                this._subTitle,
-                this._imageUrl, this._posterImageUrl,
-                this._overview, this._imdbId,
-                this._genres,
-                this._releaseDate, this._popularity, this._alternative);
+            return new Metadata(this.fileName, 
+                this.directory, 
+                this.host,
+                this.title, 
+                this.subTitle,
+                this.imageUrl, this.posterImageUrl,
+                this.overview, this.imdbId,
+                this.genres,
+                this.releaseDate, this.popularity, this.alternative);
         }
     }
 }

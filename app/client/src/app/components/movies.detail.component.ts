@@ -20,7 +20,6 @@ import { UpnpService, Device } from '../services/upnp.service';
 export class MovieDetailComponent implements OnInit {
 
     movieImdbId: number;
-    selectedDevice: Device;
     private movie: any;
     private devices: Observable<Device[]>;
 
@@ -31,6 +30,8 @@ export class MovieDetailComponent implements OnInit {
     }
 
     ngOnInit() {
+      this.movie = { metadata:  {} };
+
       this.route.paramMap
           .switchMap((params: ParamMap) => {
                 console.log(params);
@@ -43,8 +44,8 @@ export class MovieDetailComponent implements OnInit {
           this.devices.subscribe(w => console.log(w));
     }
 
-    playOn() {
-      console.log('play ', this.movie, ' on ', this.selectedDevice);
-      this.upnp.play(this.selectedDevice, this.movie);
+    playOn(device) {
+      console.log('play ', this.movie, ' on ', device);
+      this.upnp.play(device, this.movie);
     }
 }

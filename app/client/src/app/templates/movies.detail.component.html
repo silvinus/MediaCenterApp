@@ -1,9 +1,14 @@
-Hello World ! {{movieImdbId}}
+<div class="row" style="background-image: url({{movie.metadata.posterImageUrl}})">
+    <div class="col-md-8">
+        <h1>{{movie.metadata.title}}</h1>
+        <div class="row">
+            <div class="col-md-6">.col-md-6</div>
+            <div class="col-md-6">.col-md-6</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div>Play On</div>
 
-<select [(ngModel)]="selectedDevice">
-    <option *ngFor="let d of devices | async" [ngValue]="d">{{d.name}}</option>
-</select>
-
-{{selectedDevice}}
-
-<button (click)="playOn()">Play movie</button>
+        <a *ngFor="let d of devices | async"><span (click)="playOn(d)">{{d.name}}</span></a>
+    </div>
+</div>

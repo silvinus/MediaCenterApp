@@ -5,8 +5,10 @@ import fs = require("fs");
 import ffmpeg = require('ffmpeg');
 import extend = require('util-extend');
 
+//https://www.npmjs.com/package/fs-explorer
 export interface IFileSystem {
-    files(directory: String): Array<File>
+    files(directory: String): Array<File>,
+    fileExists(path: String): boolean
 }
 
 @injectable()
@@ -28,6 +30,11 @@ export class FileSystemUtil implements IFileSystem {
         let fileList: File[] = new Array();
         this.walkInternal(directory, fileList);
         return fileList;
+    }
+
+    
+    fileExists(path: String): boolean {
+        return fs.existsSync(path.toString())
     }
 }
 
