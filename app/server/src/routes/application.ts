@@ -66,28 +66,6 @@ export class AppRoute implements IRoute {
         this.sync(req, res, next);
       });
     }
-
-    // var fileSystem = require('fs');
-    // router.get(this.APP_BASE_URL + "/movie/:id/stream/*", async (req: Request, res: Response, next: NextFunction) => {
-    //   let resp = await this.collection.find({'metadata.imdbId': +req.params.id });
-      
-    //   let result = resp[0] || undefined;
-    //   if(!result) {
-    //     res.send(404);
-    //   }
-
-    //   let path = result.directory + '\\' +result.fileName.toString();
-    //   // let stat = fileSystem.fstatSync(path);
-    //   res.writeHead(200, {
-    //     'Content-Length': 3000000
-    //   })
-    //   var readStream = fileSystem.createReadStream(path);
-    //   readStream.pipe(res);
-
-    //   // res.sendFile(result.directory + '\\' +result.fileName.toString(), err => {
-    //   //   console.log(err);
-    //   // });
-    // });
   }
 
   public sync(req: Request, res: Response, next: NextFunction) {
@@ -98,6 +76,7 @@ export class AppRoute implements IRoute {
                     all.slaves.forEach(s => {
                       this.slaveService.sync(s)
                                       .then(result => {
+                                        console.log("result from " + s.name, result);
                                         result.toRemove.forEach(element => {
                                           this.collection.remove(element.fileName.toString());
                                         });

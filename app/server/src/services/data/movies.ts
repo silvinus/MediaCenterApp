@@ -23,12 +23,12 @@ export class MoviesRepository implements IMovies {
 
     constructor(private slaveMode: boolean) {
         // Using a unique constraint with the index
-        this.master.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) { });
-        this.slave.ensureIndex({ fieldName: '_fileName', unique: true }, function (err) { });
         if(this.slaveMode) {
+            this.slave.ensureIndex({ fieldName: 'fileName', unique: true }, function (err) { });
             this.instance = this.slave;
         }
         else {
+            this.master.ensureIndex({ fieldName: 'fileName', unique: true }, function (err) { });
             this.instance = this.master;
         }
     }

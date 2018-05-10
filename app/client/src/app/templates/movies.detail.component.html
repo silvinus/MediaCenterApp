@@ -1,4 +1,6 @@
-<div class="row" style="background-image: url({{movie.metadata.posterImageUrl}})">
+<div class="row" [style.backgroundImage]="'url('+ movie.metadata.posterImageUrl +')'">
+        <div [style.backgroundImage]="'url('+ movie.metadata.posterImageUrl +')'">
+            </div>
     <div class="col-md-8">
         <h1>{{movie.metadata.title}}</h1>
         <div class="row">

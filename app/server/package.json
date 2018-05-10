@@ -15,7 +15,7 @@
     "method-override": "^2.3.9",
     "morgan": "^1.8.2",
     "nedb": "^1.8.0",
-    "nodecast-js": "^1.0.3",
+    "nodecast-js": "1.0.3",
     "reflect-metadata": "^0.1.10",
     "typed-rest-client": "^1.0.7",
     "util-extend": "^1.0.3"
