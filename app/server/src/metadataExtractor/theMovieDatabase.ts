@@ -9,11 +9,9 @@ export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
     // TODO: export on settings
     private readonly _apiKey: String = "api_key=8c46bd4597983f80f3281bcb4568e066";
     private readonly _conf: Promise<any>;
-    private readonly promises: Array<Promise<void>>;
-    private readonly queue: Array<metadata.Builder>;
+    private readonly queue: Array<any>;
 
 	constructor() {
-        this.promises = [];
         this.queue = [];
 
         this._conf = this.configuration().then((conf) => {
@@ -21,10 +19,11 @@ export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
                         });
         setInterval(() => {
             if(this.queue.length > 0) {
-                this.queue.slice(0, 35)
-                          .forEach(w => this.extract(w));
+                console.log("dequeue 35 builders");
+                this.queue.splice(0, 35)
+                          .forEach(w => this.extractInternal(w.builder, w.resolve, w.reject));
             }
-        }, 5000)
+        }, 10000)
 	}
     
 
@@ -33,42 +32,39 @@ export class TheMovieDatabaseMetadataExtractor implements IMetadataExtractor {
         if(builder.imageUrl) {
             return Promise.resolve();
         }
-
-        let promise = new Promise<void>((resolve, reject) => {
-            this._conf.then((conf) => {
-                    const _conf = conf;
-                    // finally search movie
-                    this.search(builder.title || builder.fileName).then((result) => {
-                        console.log(result);
-                        if(result.total_results > 0) {
-                            let bestResult = result.results[0];
-                            builder.title = bestResult.original_title;
-                            builder.subTitle = bestResult.title;
-                            builder.imageUrl = _conf.images.secure_base_url + "w185" +  bestResult.poster_path;
-                            builder.posterImageUrl = _conf.images.secure_base_url + "original" +  bestResult.poster_path;
-                            builder.overview = bestResult.overview;
-                            builder.imdbId = bestResult.id;
-                            builder.genres = bestResult.genre_ids;
-                            builder.releaseDate = bestResult.release_date;
-                            builder.popularity = bestResult.popularity;
-                            builder.alternative = result.results.splice(0, 1);
-                        }
-                        resolve();
-                    }, e => reject(e));
-                }, e => reject(e));
+        
+        return new Promise<void>((resolve, reject) => {
+            console.log("enqueu the builder");
+            this.queue.push({
+                    builder: builder,
+                    resolve: resolve,
+                    reject: reject
+            });
         });
+    }
 
-        if(this.promises.length > 35) {
-            await Promise.all(this.promises)
-                         .then(_ => this.promises.splice(0));
-
-            this.queue.push(builder);
-        }
-        else {
-            this.promises.push(promise);
-        }
-
-        return promise;
+    private extractInternal(builder, resolve, reject): void {
+        this._conf.then((conf) => {
+            const _conf = conf;
+            // finally search movie
+            this.search(builder.title || builder.fileName).then((result) => {
+                console.log(result);
+                if(result.total_results > 0) {
+                    let bestResult = result.results[0];
+                    builder.title = bestResult.original_title;
+                    builder.subTitle = bestResult.title;
+                    builder.imageUrl = _conf.images.secure_base_url + "w185" +  bestResult.poster_path;
+                    builder.posterImageUrl = _conf.images.secure_base_url + "original" +  bestResult.poster_path;
+                    builder.overview = bestResult.overview;
+                    builder.imdbId = bestResult.id;
+                    builder.genres = bestResult.genre_ids;
+                    builder.releaseDate = bestResult.release_date;
+                    builder.popularity = bestResult.popularity;
+                    builder.alternative = result.results.splice(0, 1);
+                }
+                resolve();
+            }, e => reject(e));
+        }, e => reject(e));
     }
 
     private configuration(): Promise<any> {

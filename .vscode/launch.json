@@ -14,7 +14,7 @@
                 "NODE_ENV": "development"
             },
             "args": [
-                "mode=master,slave"
+                "mode=slave"
             ],
             "outFiles": [
                 "${workspaceRoot}/app/server/dist/**/*.js"

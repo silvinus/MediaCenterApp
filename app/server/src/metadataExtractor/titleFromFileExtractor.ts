@@ -10,8 +10,17 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
             tmp = this.supressUnexpectedChar(tmp);
             tmp = this.supressYear(tmp);
             tmp = this.supressKnowWords(tmp);
-            console.log("Finded title : " + tmp);
-            builder.title = tmp;
+            let seriesTypo = this.findSeriesTypo(tmp);
+            console.log("Finded title : " + tmp, seriesTypo);
+            if(seriesTypo.isSerie) {
+                builder.isSerie = true;
+                builder.saison = seriesTypo.saison;
+                builder.episode = seriesTypo.episode;
+                builder.title = seriesTypo.title;
+            }
+            else {
+                builder.title = tmp;
+            }
         }
         console.log("Title not extracted. already present : " + builder.title);
 
@@ -37,8 +46,23 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
         return entry;
     }
 
+    private findSeriesTypo(title: string): any {
+        let reg = new RegExp(/(.*)s([0-9]{1,2})e([0-9]{1,2})/);
+        let match = reg.exec(title);
+
+        if(match != null) {
+            return { 
+                isSerie: true,
+                saison: match[2],
+                episode: match[3],
+                title: match[1].trim()
+             }
+        }
+        return { isSerie: false };
+    }
+
     private supressKnowWords(entry: string): string {
-        let containWords = entry.split(' ');
+        let containWords = entry.split(' ').filter(w => w !== '');
         let tmp: string = '';
         for(let w of containWords) {
             if(this.unexpectedWords.indexOf(w) != -1) {
@@ -55,6 +79,7 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
 
     private unexpectedWords: string[] = [
         'nextorrent',
+        'torrent9',
         'pw',
         'net',
         'org',
@@ -100,6 +125,8 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
     '51',
     '71',
     'vostfr',
+    'vost',
+    'deleted scenes',
     'stfr',
     'str',
     'subtitle',

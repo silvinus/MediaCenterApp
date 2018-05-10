@@ -20,6 +20,19 @@ import { ISlave, SlaveService, SlaveReport } from "../services/slave/slaveServic
  */
 @injectable()
 export class SlaveRoute implements IRoute {
+  generateUUIDString(): any {
+    let d = new Date().getTime();
+    // if(window.performance && typeof window.performance.now === 'function') {
+    //   d += performance.now(); 
+    // }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      let r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d/16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
   private readonly fsTools: IFileSystem;
   private readonly httpUtils: IHTTPUtils;
   private readonly collection: IMovies;
@@ -110,6 +123,7 @@ export class SlaveRoute implements IRoute {
         builder.fileName = file.fileName.toString();
         builder.directory = file.directory.toString();
         builder.host = device.toString();
+        builder.imdbId = this.generateUUIDString();
 
         let final = Movie.fromMetadata((await this.executor.execute(builder)).build());
         // insert local

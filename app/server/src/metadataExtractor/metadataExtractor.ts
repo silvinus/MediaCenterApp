@@ -46,7 +46,7 @@ export namespace metadata {
             return new Metadata(obj.fileName, obj.directory, obj.host, obj.title,
                                     obj.subTitle, obj.imageUrl, obj.posterImageUrl,
                                     obj.overview, obj.imdbId, obj.genres, obj.releaseDate,
-                                    obj.popularity, obj.alternative);
+                                    obj.popularity, obj.alternative, obj.isSerie, obj.saison, obj.episode);
         }
         
         fileName: string = "";
@@ -62,10 +62,14 @@ export namespace metadata {
         releaseDate: string = "";
         popularity: number;
         alternative: any[];
+        isSerie: boolean;
+        saison: string;
+        episode: string;
 
         constructor(fileName: string, directory: string, host: string, title: string, subtitle: string,
                         imageUrl: string, posterImageUrl: string, overview: string, imdbId: number,
-                        genres: number[], releaseDate: string, popularity: number, alternative: any[]) {
+                        genres: number[], releaseDate: string, popularity: number, alternative: any[],
+                        isSerie: boolean, saison: string, episode: string) {
             this.fileName = fileName;
             this.directory = directory;
             this.host = host;
@@ -79,6 +83,9 @@ export namespace metadata {
             this.releaseDate = releaseDate;
             this.popularity = popularity;
             this.alternative = alternative;
+            this.isSerie = isSerie;
+            this.episode = episode;
+            this.saison = saison;
         }
     }
 
@@ -96,6 +103,9 @@ export namespace metadata {
         releaseDate: string = "";
         popularity: number = 0;
         alternative: any[];
+        isSerie: boolean;
+        saison: string;
+        episode: string;
 
         public build(): Metadata {
             return new Metadata(this.fileName, 
@@ -106,7 +116,8 @@ export namespace metadata {
                 this.imageUrl, this.posterImageUrl,
                 this.overview, this.imdbId,
                 this.genres,
-                this.releaseDate, this.popularity, this.alternative);
+                this.releaseDate, this.popularity, this.alternative,
+                this.isSerie, this.saison, this.episode);
         }
     }
 }
