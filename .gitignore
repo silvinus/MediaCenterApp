@@ -47,6 +47,5 @@ testem.log
 Thumbs.db
 
 /.history
-/.mediacenter
+.mediacenter/db/*
 /.tscache
-.mediacenter/db/mediacenter
