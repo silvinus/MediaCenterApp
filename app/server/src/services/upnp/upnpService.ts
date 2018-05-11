@@ -1,6 +1,6 @@
 
 import { injectable, postConstruct } from "inversify";
-const NodeCast = require('nodecast-js');
+const NodeCast = require('../../extern/nodecast-js');
 
 export interface IUpnpService {
     start(): void;
@@ -58,8 +58,6 @@ export class DefaultUpnpService implements IUpnpService {
                              .map(w => new Device(w.name, w.host, w));
     }
     playOn(device: Device, url: String): void {
-        const urlTest = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4';
-        const timestamp = 60; // in seconds
-        device.wrap.play(url, timestamp);
+        device.wrap.play(url, 60);
     }
 }

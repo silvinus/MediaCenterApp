@@ -37,9 +37,8 @@ gulp.task('install:client', done => {
 });
 
 // This task can be run alone with "gulp serverscripts"
-gulp.task('serverscripts', () => {
+gulp.task('serverscripts', ['copyexternal'], () => {
   return serverTsProject.src()
-  
     .pipe(sourcemaps.init())
                         .pipe(serverTsProject())
                         .js
@@ -50,6 +49,11 @@ gulp.task('serverscripts', () => {
       }
     }))
     .pipe(gulp.dest('app/server/dist'));
+});
+
+gulp.task('copyexternal', () => {
+  return gulp.src('app/server/src/extern/**/*', { base:'app/server/src' })
+            .pipe(gulp.dest('app/server/dist'));
 });
 
 gulp.task('clientscripts', function (done) {
