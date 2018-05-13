@@ -40,7 +40,7 @@ export class UpnpRoute implements IRoute {
                     res.send(404);
                 }        
 
-                let streamUrl = 'http://' + sett[0].ip + ":" + sett[0].port + "/app/movie/" + params.movie.metadata.imdbId + "/stream/" + encodeURIComponent(params.movie.fileName);
+                let streamUrl = 'http://' + sett[0].ip + ":" + sett[0].port + "/app/movie/" + params.movie.fileName + "/stream/" + encodeURIComponent(params.movie.fileName);
                 this._service.playOn(device[0], streamUrl);
                 console.log(req);
             });

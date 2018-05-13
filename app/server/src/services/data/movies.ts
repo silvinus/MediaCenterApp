@@ -53,7 +53,7 @@ export class MoviesRepository implements IMovies {
     }
 
     public insertMovie(movie: Movie): void {
-        this.instance.insert(movie, err => err ? console.error(err) : console.log("Movie inserted " + movie.metadata.title));
+        this.instance.insert(movie, err => err ? console.error(err) : console.log("Movie inserted " + (movie.metadata ? movie.metadata.title : movie.fileName)));
     }
 
     public updateMovie(key: string, update: Movie): void {

@@ -68,6 +68,19 @@ export class AppRoute implements IRoute {
     }
   }
 
+  generateUUIDString(): any {
+    let d = new Date().getTime();
+    // if(window.performance && typeof window.performance.now === 'function') {
+    //   d += performance.now(); 
+    // }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      let r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d/16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
   public sync(req: Request, res: Response, next: NextFunction) {
     let allPromise: Promise<any>[] = new Array();
 
@@ -75,14 +88,21 @@ export class AppRoute implements IRoute {
                  .then(all => {
                     all.slaves.forEach(s => {
                       this.slaveService.sync(s)
-                                      .then(result => {
+                                      .then(async (result) => {
                                         console.log("result from " + s.name, result);
                                         result.toRemove.forEach(element => {
                                           this.collection.remove(element.fileName.toString());
                                         });
-                                        result.toAdd.forEach(element => {
-                                          this.collection.insertMovie(element);
-                                        });
+                                        await Promise.all(result.toAdd.map(async (element) => {
+                                          let builder = new metadata.Builder();
+                                          builder.directory = element.directory.toString();
+                                          builder.fileName = element.fileName.toString();
+                                          builder.host = element.host.toString();
+                                          builder.imdbId = this.generateUUIDString();
+                                          
+                                          let populateBuilder = await this.executor.execute(builder);
+                                          this.collection.insertMovie(Movie.fromMetadata(populateBuilder.build()));
+                                        }));
                                       })
 
                     });

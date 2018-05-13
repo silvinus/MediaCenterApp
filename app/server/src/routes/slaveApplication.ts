@@ -20,19 +20,6 @@ import { ISlave, SlaveService, SlaveReport } from "../services/slave/slaveServic
  */
 @injectable()
 export class SlaveRoute implements IRoute {
-  generateUUIDString(): any {
-    let d = new Date().getTime();
-    // if(window.performance && typeof window.performance.now === 'function') {
-    //   d += performance.now(); 
-    // }
-
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-      let r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d/16);
-      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-  }
-
   private readonly fsTools: IFileSystem;
   private readonly httpUtils: IHTTPUtils;
   private readonly collection: IMovies;
@@ -71,12 +58,13 @@ export class SlaveRoute implements IRoute {
         this.scan(req, res, next);
       });
       router.get(this.APP_BASE_URL + "/movie/:id/stream/*", (req: Request, res: Response, next: NextFunction) => {
-        this.collection.find({'metadata.imdbId': +req.params.id }).then(resp => {
+        this.collection.find({'fileName': req.params.id }).then(resp => {
           let result = resp[0] || undefined;
           if(!result) {
             res.send(404);
+            return;
           }
-          res.sendFile(result.directory + '\\' +result.fileName.toString());
+          res.sendFile(result.directory + '\\' + result.fileName.toString());
         });
       });
     }
@@ -116,19 +104,18 @@ export class SlaveRoute implements IRoute {
       // loop on each files not with extension allowed and not in items (new files)
       // nothing will be do for existings items.
       let filtered = this.fsTools.files(p)
-                                .filter(w => allowedExtension.indexOf(w.extension) != -1)
+                                .filter(w => allowedExtension.indexOf(w.extension) != -1) // be carefull if ext not at the end but part of title
                                 .filter(w => all.filter(x => x.fileName === w.fileName).length === 0);
       await Promise.all(filtered.map(async file => {
-        let builder = metadata.Metadata.builder();
-        builder.fileName = file.fileName.toString();
-        builder.directory = file.directory.toString();
-        builder.host = device.toString();
-        builder.imdbId = this.generateUUIDString();
+        let item = new Movie();
+        item.fileName = file.fileName.toString();
+        item.directory = file.directory.toString();
+        item.host = device.toString();
 
-        let final = Movie.fromMetadata((await this.executor.execute(builder)).build());
+        // let final = Movie.fromMetadata((await this.executor.execute(builder)).build());
         // insert local
-        this.collection.insertMovie(final);
-        result.toAdd.push(final);
+        this.collection.insertMovie(item);
+        result.toAdd.push(item);
       }));
 
       resolve(result);
