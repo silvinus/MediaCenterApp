@@ -38,7 +38,7 @@ container.bind<IRoute>(CONST.ROUTES_COMPONENTS).to(SlaveRoute);
 container.bind<IMetadataExtractorExecutor>("extractorsExecutor").to(MetadataExtractorExecutor);
 
 // Extractors
-container.bind<IMetadataExtractor>("extractors").to(FfmpegMetadataExtractor);
+// container.bind<IMetadataExtractor>("extractors").to(FfmpegMetadataExtractor); // usefull only on local...
 container.bind<IMetadataExtractor>("extractors").to(TitleFromFileExtractor);
 container.bind<IMetadataExtractor>("extractors").to(TheMovieDatabaseMetadataExtractor);
 
