@@ -16,6 +16,7 @@ import { StaticRoute } from "../routes/static";
 import { SettingsRoute } from "../routes/settings";
 import { ISlave, SlaveService } from "../services/slave/slaveService";
 import { SlaveRoute } from "../routes/slaveApplication";
+import { ISlaveHealthCheck, SlaveHealthCheck } from "../services/slave/slaveHealthCheck";
 let CONST = require("../IoC/constantes");
 
 var container = new Container();
@@ -47,5 +48,6 @@ container.bind<IUpnpService>("upnp").to(DefaultUpnpService).inSingletonScope();
 
 // slave service for communication
 container.bind<ISlave>("slave").to(SlaveService).inSingletonScope();
+container.bind<ISlaveHealthCheck>("slaveHealthCheck").to(SlaveHealthCheck).inSingletonScope();
 
 export default container;

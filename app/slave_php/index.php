@@ -81,6 +81,11 @@ else if($method == 'GET' && preg_match('/app\/movie\/(.*)\/stream\/.*/', $path, 
     header("Status: 404 Not Found");
   }
 }
+else if($method == 'GET' && preg_match('/app\/healthcheck/', $path, $matches, PREG_OFFSET_CAPTURE)) {
+  echo json_encode( (object) [
+    'isAlive' => true
+  ]);
+}
 else {
   header("Status: 404 Not Found");
 }

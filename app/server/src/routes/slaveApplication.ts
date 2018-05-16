@@ -53,7 +53,10 @@ export class SlaveRoute implements IRoute {
       //log
       console.log("[SlaveRoute::create] Creating slave app routes.");
 
-      // slave route
+      // slave route      
+      router.get(this.APP_BASE_URL + "/healthCheck", (req: Request, res: Response, next: NextFunction) => {
+        this.httpUtils.configureJSONResponse(req, res, { isAlive: true });
+      });
       router.post(this.APP_BASE_URL + "/scan/:name", (req: Request, res: Response, next: NextFunction) => {
         this.scan(req, res, next);
       });

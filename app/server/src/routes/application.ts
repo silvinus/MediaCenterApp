@@ -11,6 +11,7 @@ import { IMetadataExtractorExecutor, metadata } from "../metadataExtractor/metad
 import { IUpnpService } from "../services/upnp/upnpService";
 import { ISettings } from "../services/data/settings";
 import { ISlave, SlaveService, SlaveReport } from "../services/slave/slaveService";
+import { ISlaveHealthCheck } from "../services/slave/slaveHealthCheck";
 
 
 /**
@@ -26,6 +27,7 @@ export class AppRoute implements IRoute {
   private readonly executor: IMetadataExtractorExecutor;
   private readonly settings: ISettings;
   private readonly slaveService: ISlave;
+  private readonly slaveHealthCheck: ISlaveHealthCheck;
   readonly APP_BASE_URL = "/app";
 
   /**
@@ -41,7 +43,8 @@ export class AppRoute implements IRoute {
     @inject("extractorsExecutor") executor: IMetadataExtractorExecutor, 
     @inject("upnp") upnpService: IUpnpService,
     @inject("settings") settings: ISettings,
-    @inject("slave") slaveService: ISlave
+    @inject("slave") slaveService: ISlave,
+    @inject("slaveHealthCheck") slaveHealthCheck: ISlaveHealthCheck
   ) {
     this.fsTools = fsTools;
     this.httpUtils = httpUtils;
@@ -49,6 +52,7 @@ export class AppRoute implements IRoute {
     this.executor = executor;
     this.settings = settings;
     this.slaveService = slaveService;
+    this.slaveHealthCheck = slaveHealthCheck;
   }
 
   public configure(router: Router) {
@@ -64,6 +68,9 @@ export class AppRoute implements IRoute {
       });
       router.post(this.APP_BASE_URL + "/sync", (req: Request, res: Response, next: NextFunction) => {
         this.sync(req, res, next);
+      });
+      router.get(this.APP_BASE_URL + "/slave/healthcheck", (req: Request, res: Response, next: NextFunction) => {
+        this.httpUtils.configureJSONResponse(req, res, this.slaveHealthCheck.getReport());
       });
     }
   }
