@@ -12,6 +12,7 @@ import { IUpnpService } from "../services/upnp/upnpService";
 import { ISettings } from "../services/data/settings";
 import { ISlave, SlaveService, SlaveReport } from "../services/slave/slaveService";
 import { ISlaveHealthCheck } from "../services/slave/slaveHealthCheck";
+let logger = require("debug")("mediacenter");
 
 
 /**
@@ -58,7 +59,7 @@ export class AppRoute implements IRoute {
   public configure(router: Router) {
     //log
     if(this.settings.isMaster()) {
-      console.log("[AppRoute::create] Creating app routes.");
+      logger("[AppRoute::create] Creating app routes.");
 
       router.get(this.APP_BASE_URL + "/movies", (req: Request, res: Response, next: NextFunction) => {
         this.movies(req, res, next);
@@ -88,40 +89,57 @@ export class AppRoute implements IRoute {
     });
   }
 
-  public sync(req: Request, res: Response, next: NextFunction) {
-    let allPromise: Promise<any>[] = new Array();
+  public async sync(req: Request, res: Response, next: NextFunction) {
+    let allMovies: Movie[] = new Array();
 
-    this.settings.settings()
-                 .then(all => {
-                    all.slaves.forEach(s => {
-                      this.slaveService.sync(s)
-                                      .then(async (result) => {
-                                        console.log("result from " + s.name, result);
-                                        result.toRemove.forEach(element => {
-                                          this.collection.remove(element.fileName.toString());
-                                        });
-                                        await Promise.all(result.toAdd.map(async (element) => {
-                                          let builder = new metadata.Builder();
-                                          builder.directory = element.directory.toString();
-                                          builder.fileName = element.fileName.toString();
-                                          builder.host = element.host.toString();
-                                          builder.imdbId = this.generateUUIDString();
-                                          
-                                          let populateBuilder = await this.executor.execute(builder);
-                                          this.collection.insertMovie(Movie.fromMetadata(populateBuilder.build()));
-                                        }));
-                                      })
+    let all = await this.settings.settings();
+    await Promise.all(all.slaves.map(async s => {
+      let result = await this.slaveService.sync(s);
+      console.log("result from " + s.name, result);
+      (await this.synchronize(result)).forEach(w => allMovies.push(w));
+    }));
+    this.httpUtils.configureJSONResponse(req, res, { 'movies': allMovies });
+  }
 
-                    });
-                 });
+  private async synchronize(result: SlaveReport): Promise<Movie[]> {
+    result.toRemove.forEach(element => {
+      this.collection.remove(element.fileName.toString());
+    });
+    return await Promise.all(result.toAdd.map(async (element) => {
+      let builder = new metadata.Builder();
+      builder.directory = element.directory.toString();
+      builder.fileName = element.fileName.toString();
+      builder.host = element.host.toString();
+      builder.imdbId = this.generateUUIDString();
+      
+      return new Promise<Movie>((resolve, reject) => {
+        this.executor.execute(builder).then(populateBuilder => {
+          this.findMovie(populateBuilder.imdbId).then(async movie => {
+            if(populateBuilder.isSerie) {
+              if(movie !== undefined) {
+                movie.metadata.saisonEpisodes.push(
+                  new metadata.SaisonEpisode(populateBuilder.saisonEpisodes.saison, populateBuilder.saisonEpisodes.episode, populateBuilder.saisonEpisodes.filename))
+                this.collection.updateMovie(movie.fileName.toString(), movie);
+              }
+              else {
+                movie = Movie.fromMetadata(populateBuilder.build());
+                await this.collection.insertMovie(movie);
+              }
+            }
+            else {
+              movie = Movie.fromMetadata(populateBuilder.build());
+              await this.collection.insertMovie(movie);
+            }
+            resolve(movie);
+          });
+        });
+      });
+      // let populateBuilder = await this.executor.execute(builder)
+      
+      // let movie: Movie = await this.findMovie(populateBuilder.imdbId);
 
-        Promise.all(allPromise)
-                .then(
-                  promises => { 
-                    Promise.all(promises.filter(_ => _ != null))
-                           .then(movies => this.httpUtils.configureJSONResponse(req, res, { 'movies': movies }))
-                  },
-                  err => this.httpUtils.configureJSONResponse(req, res, { 'error': err }));
+      
+    }));
   }
 
   public movies(req: Request, res: Response, next: NextFunction) {
@@ -130,11 +148,31 @@ export class AppRoute implements IRoute {
     });
   }
 
-  public movie(req: Request, res: Response, next: NextFunction) {
-    console.log(req);
-    this.collection.find({'metadata.imdbId': +req.params.id }).then(resp => {
-      let result = resp[0] || undefined;
-      this.httpUtils.configureJSONResponse(req, res, result);
-    });
+  public async movie(req: Request, res: Response, next: NextFunction) {
+    logger(req.originalUrl);
+    let query: any;
+
+    //hack because in database we have number (real ImdbId) or UUID...
+    // Have to fix it
+    if(isNaN(+req.params.id)) {
+      query = {'metadata.imdbId': req.params.id };
+    }
+    else {
+      query = {'metadata.imdbId': +req.params.id };
+    }
+    this.httpUtils.configureJSONResponse(req, res, (await this.findMovie(req.params.id)));
+  }
+
+  private async findMovie(imdbId: any): Promise<Movie> {
+    let query: any;
+    //hack because in database we have number (real ImdbId) or UUID...
+    // Have to fix it
+    if(isNaN(+imdbId)) {
+      query = {'metadata.imdbId': imdbId };
+    }
+    else {
+      query = {'metadata.imdbId': +imdbId };
+    }
+    return (await this.collection.find(query))[0] || undefined;
   }
 }

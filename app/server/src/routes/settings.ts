@@ -4,6 +4,7 @@ import { inject, injectable } from "inversify";
 import { ISettings } from "../services/data/settings";
 import { settings } from "cluster";
 let CONST = require("../IoC/constantes");
+let logger = require("debug")("mediacenter");
 
 @injectable()
 export class SettingsRoute implements IRoute {
@@ -17,7 +18,7 @@ export class SettingsRoute implements IRoute {
 
     configure(router: Router) {
         if(this.collection.isMaster()) {
-            console.log("[SettingsRoute::create] Creating settings routes.");
+            logger("[SettingsRoute::create] Creating settings routes.");
             router.get(CONST.BASE_APP_URL + "/settings", (req: Request, res: Response, next: NextFunction) => {
                 this.collection.settings().then(resp => {
                     res.json(resp);
@@ -25,7 +26,7 @@ export class SettingsRoute implements IRoute {
             });
 
             router.post(CONST.BASE_APP_URL + "/settings", (req: Request, res: Response, next: NextFunction) => {
-                console.log(req.body);
+                logger(req.body);
                 this.collection.save(req.body).then(resp => {
                     res.json(resp);
                 });

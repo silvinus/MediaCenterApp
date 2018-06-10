@@ -11,6 +11,7 @@ import { IMetadataExtractorExecutor, metadata } from "../metadataExtractor/metad
 import { IUpnpService } from "../services/upnp/upnpService";
 import { ISettings } from "../services/data/settings";
 import { ISlave, SlaveService, SlaveReport } from "../services/slave/slaveService";
+let logger = require("debug")("mediacenter");
 
 
 /**
@@ -51,7 +52,7 @@ export class SlaveRoute implements IRoute {
   public configure(router: Router) {
     if(this.settings.isSlave()) {
       //log
-      console.log("[SlaveRoute::create] Creating slave app routes.");
+      logger("[SlaveRoute::create] Creating slave app routes.");
 
       // slave route      
       router.get(this.APP_BASE_URL + "/healthCheck", (req: Request, res: Response, next: NextFunction) => {

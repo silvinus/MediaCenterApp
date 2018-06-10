@@ -19,7 +19,7 @@ import { UpnpService, Device } from '../services/upnp.service';
 })
 export class MovieDetailComponent implements OnInit {
 
-    movieImdbId: number;
+    movieImdbId: string;
     private movie: any;
     private devices: Observable<Device[]>;
 
@@ -35,7 +35,7 @@ export class MovieDetailComponent implements OnInit {
       this.route.paramMap
           .switchMap((params: ParamMap) => {
                 console.log(params);
-                this.movieImdbId = +params.get('id');
+                this.movieImdbId = params.get('id');
                 return this.service.movie(this.movieImdbId);
             })
           .subscribe((movie: any) => this.movie = movie);

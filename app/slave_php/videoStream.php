@@ -41,7 +41,6 @@ class VideoStream
      */
     private function setHeader()
     {
-        $this->logInFile("set header");
         ob_get_clean();
         header("Content-Type: video/x-msvideo");
         header("Cache-Control: max-age=2592000, public");
@@ -51,9 +50,8 @@ class VideoStream
         $this->size  = filesize($this->path);
         $this->end   = $this->size - 1;
 
-        $this->logInFile("Accept-Ranges: 0-".$this->end);
-        // header("Accept-Ranges: 0-".$this->end);
-        header("Accept-Ranges: bytes");
+        header("Accept-Ranges: 0-".$this->end);
+        // header("Accept-Ranges: bytes");
         header("Connection: keep-alive");
          
         if (isset($_SERVER['HTTP_RANGE'])) {
@@ -63,7 +61,6 @@ class VideoStream
  
             list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
             if (strpos($range, ',') !== false) {
-                logInFile('HTTP/1.1 416 Requested Range Not Satisfiable');
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
                 header("Content-Range: bytes $this->start-$this->end/$this->size");
                 exit;
@@ -78,7 +75,6 @@ class VideoStream
             }
             $c_end = ($c_end > $this->end) ? $this->end : $c_end;
             if ($c_start > $c_end || $c_start > $this->size - 1 || $c_end >= $this->size) {
-                logInFile('HTTP/1.1 416 Requested Range Not Satisfiable');
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
                 header("Content-Range: bytes $this->start-$this->end/$this->size");
                 exit;
@@ -88,7 +84,6 @@ class VideoStream
             $length = $this->end - $this->start + 1;
             fseek($this->stream, $this->start);
             header('HTTP/1.1 206 Partial Content');
-            $this->logInFile("Content-Length: ".$length);
             header("Content-Length: ".$length);
             $this->logInFile("Content-Range: bytes $this->start-$this->end/".$this->size);
             header("Content-Range: bytes $this->start-$this->end/".$this->size);
@@ -107,6 +102,7 @@ class VideoStream
     private function end()
     {
         fclose($this->stream);
+        $this->logInFile("exit");
         exit;
     }
      
@@ -134,10 +130,13 @@ class VideoStream
      */
     function start()
     {
+        $this->logInFile("Open");
         $this->open();
-        $this->logInFile("Start set header");
+        $this->logInFile("set header");
         $this->setHeader();
+        $this->logInFile("stream");
         $this->stream();
+        $this->logInFile("close");
         $this->end();
     }
 }

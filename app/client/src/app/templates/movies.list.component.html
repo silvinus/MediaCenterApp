@@ -1,15 +1,16 @@
+<div><input placeholder="Search movie..." type="text" [(ngModel)]="searchText" /></div>
 <mat-grid-list cols="5" gutterSize="15px">
-  <mat-grid-tile *ngFor="let movie of movies | async" (click) = onSelect(movie)
+  <mat-grid-tile *ngFor="let movie of movies | async | filter : searchText:'fileName'" (click) = onSelect(movie)
     [class.selected]="movie === selectedMovie"
     [class.hover]="hover === true"
     (mouseenter)="hover = true"
     (mouseleave)="hover = false">
     <img [alt]="movie.metadata.imageUrl" [src]="movie.metadata.imageUrl">
     <mat-grid-tile-footer>
-      <h3 md-line>{{movie.metadata.title}}</h3>
-      <span md-line>{{movie.fileName}}</span>
-      <span md-line>{{movie.directory}}</span>
-      <md-icon>star_border</md-icon>
+      <h3 mat-line>{{movie.metadata.title}}</h3>
+      <span mat-line><b>{{movie.host}}</b></span>
+      <div matTooltip="Not already seen"><mat-icon>star_border</mat-icon></div>
+      <div *ngIf="!isAlive(movie.host)" matTooltip="{{movie.host}} not available"><mat-icon>warning</mat-icon></div>
     </mat-grid-tile-footer>
   </mat-grid-tile>
 </mat-grid-list>

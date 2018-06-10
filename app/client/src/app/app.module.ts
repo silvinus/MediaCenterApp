@@ -16,12 +16,18 @@ import { SettingsComponent } from './components/settings.component';
 import { MovieService } from './services/movies.service';
 import { SettingService } from './services/settings.service';
 import { UpnpService } from './services/upnp.service';
+import { FilterPipe } from './services/filter.pipe';
+
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 // import { slideInDownAnimation } from './animations/animations'
 
 @NgModule({
   declarations: [
-    AppComponent, HomeComponent, SettingsComponent, MoviesListComponent, MovieDetailComponent
+    AppComponent, HomeComponent, SettingsComponent, MoviesListComponent, MovieDetailComponent,
+    FilterPipe
   ],
   imports: [
     BrowserAnimationsModule,
@@ -33,12 +39,12 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
       { path: 'movies', component: MoviesListComponent},
       { path: 'movie/:id', component: MovieDetailComponent},
       { path: 'settings', component: SettingsComponent},
-      { path: '**', component: MoviesListComponent }
+      { path: '**', component: HomeComponent }
     ], {useHash: true, enableTracing: true}),
     MatGridListModule,
     FormsModule,
-    MDBBootstrapModule.forRoot()
-
+    MDBBootstrapModule.forRoot(),
+    MatIconModule, MatTooltipModule, MatButtonModule
     // slideInDownAnimation
   ],
   schemas: [ NO_ERRORS_SCHEMA ],

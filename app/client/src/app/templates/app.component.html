@@ -7,13 +7,13 @@
             <li class="nav-item active waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'home'}">
                 <a class="nav-link" (click)="navigate('home')">Home</a>
             </li>
-            <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'movies'}">
+            <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'movies'}" >
                 <a class="nav-link" (click)="navigate('movies')">Videos</a>
             </li>
-            <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'musics'}">
+            <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'musics'}" [disables]="true">
                 <a class="nav-link" (click)="navigate('musics')" disabled>Musics</a>
             </li>
-            <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'photos'}">
+            <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'photos'}" [disables]="true">
                 <a class="nav-link" (click)="navigate('photos')" disabled>Photos</a>
             </li>
             <li class="nav-item waves-light" mdbRippleRadius [ngClass]="{'active': currentMenu === 'settings'}">

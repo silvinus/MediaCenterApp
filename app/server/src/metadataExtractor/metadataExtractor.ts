@@ -46,7 +46,7 @@ export namespace metadata {
             return new Metadata(obj.fileName, obj.directory, obj.host, obj.title,
                                     obj.subTitle, obj.imageUrl, obj.posterImageUrl,
                                     obj.overview, obj.imdbId, obj.genres, obj.releaseDate,
-                                    obj.popularity, obj.alternative, obj.isSerie, obj.saison, obj.episode);
+                                    obj.popularity, obj.alternative, obj.isSerie, obj.saisonEpisodes);
         }
         
         fileName: string = "";
@@ -63,13 +63,12 @@ export namespace metadata {
         popularity: number;
         alternative: any[];
         isSerie: boolean;
-        saison: string;
-        episode: string;
+        saisonEpisodes: SaisonEpisode[] = [];
 
         constructor(fileName: string, directory: string, host: string, title: string, subtitle: string,
                         imageUrl: string, posterImageUrl: string, overview: string, imdbId: number,
                         genres: number[], releaseDate: string, popularity: number, alternative: any[],
-                        isSerie: boolean, saison: string, episode: string) {
+                        isSerie: boolean, saisonEpisodes: SaisonEpisode) {
             this.fileName = fileName;
             this.directory = directory;
             this.host = host;
@@ -84,8 +83,19 @@ export namespace metadata {
             this.popularity = popularity;
             this.alternative = alternative;
             this.isSerie = isSerie;
-            this.episode = episode;
+            this.saisonEpisodes.push(saisonEpisodes);
+        }
+    }
+
+    export class SaisonEpisode {
+        saison: string;
+        episode: string;
+        filename: string;
+
+        constructor(saison: string, episode: string, filename: string) {
             this.saison = saison;
+            this.episode = episode;
+            this.filename = filename;
         }
     }
 
@@ -104,8 +114,7 @@ export namespace metadata {
         popularity: number = 0;
         alternative: any[];
         isSerie: boolean;
-        saison: string;
-        episode: string;
+        saisonEpisodes: SaisonEpisode;
 
         public build(): Metadata {
             return new Metadata(this.fileName, 
@@ -117,7 +126,7 @@ export namespace metadata {
                 this.overview, this.imdbId,
                 this.genres,
                 this.releaseDate, this.popularity, this.alternative,
-                this.isSerie, this.saison, this.episode);
+                this.isSerie, this.saisonEpisodes);
         }
     }
 }

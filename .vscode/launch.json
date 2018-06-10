@@ -11,7 +11,9 @@
             "name": "Launch via NPM",
             "program": "${workspaceRoot}\\app\\server\\bin\\www",
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "development",
+                "DEBUG": ["mediacenter", "express:*", "castv2", "morgan"],
+                "DEBUG_COLORS": true
             },
             "args": [
                 "mode=master,slave"

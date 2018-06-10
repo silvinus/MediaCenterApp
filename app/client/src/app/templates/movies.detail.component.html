@@ -1,14 +1,15 @@
-<div class="row" [style.backgroundImage]="'url('+ movie.metadata.posterImageUrl +')'">
+<div class="row">
     <div class="col-md-8">
         <h1>{{movie.metadata.title}}</h1>
         <div class="row">
-            <div class="col-md-6">.col-md-6</div>
-            <div class="col-md-6">.col-md-6</div>
+            <div class="col-md-6 portrait"><img src={{movie.metadata.imageUrl}} class="poster"/></div>
+            <div class="col-md-6">{{movie.metadata.overview}}</div>
+            <div class="col-md-6">{{movie.metadata.fileName}}</div>
         </div>
     </div>
     <div class="col-md-4">
         <div>Play On</div>
 
-        <a *ngFor="let d of devices | async"><span (click)="playOn(d)">{{d.name}}</span></a>
+        <a *ngFor="let d of devices | async"><button (click)="playOn(d)" mat-button>{{d.name}}</button></a>
     </div>
 </div>

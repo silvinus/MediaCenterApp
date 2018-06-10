@@ -82,8 +82,8 @@ export class Server {
     // this.app.set("view engine", "pug");
 
     //use logger middlware
-    var debug = require('debug');
-    debug.enable('morgan');
+    // var debug = require('debug')("application");
+    // debug.enable('morgan');
     this.app.use(logger("dev", { immediate: true }));
 
     //use json form parser middlware

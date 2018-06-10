@@ -8,14 +8,16 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
             builder.title == '') {
             let tmp = this.formatString(builder.fileName);
             tmp = this.supressUnexpectedChar(tmp);
+
+            let seriesTypo = this.findSeriesTypo(tmp);
+
             tmp = this.supressYear(tmp);
             tmp = this.supressKnowWords(tmp);
-            let seriesTypo = this.findSeriesTypo(tmp);
             console.log("Finded title : " + tmp, seriesTypo);
+
             if(seriesTypo.isSerie) {
                 builder.isSerie = true;
-                builder.saison = seriesTypo.saison;
-                builder.episode = seriesTypo.episode;
+                builder.saisonEpisodes = new metadata.SaisonEpisode(seriesTypo.saison, seriesTypo.episode, builder.fileName);
                 builder.title = seriesTypo.title;
             }
             else {
@@ -47,7 +49,7 @@ export class TitleFromFileExtractor implements IMetadataExtractor {
     }
 
     private findSeriesTypo(title: string): any {
-        let reg = new RegExp(/(.*)s([0-9]{1,2})e([0-9]{1,2})/);
+        let reg = new RegExp(/(.*)[sS]([0-9]{1,2})[eE]([0-9]{1,2})/);
         let match = reg.exec(title);
 
         if(match != null) {

@@ -18,7 +18,7 @@ export class MovieService {
                         });
     }
 
-    movie(id: Number): any {
+    movie(id: string): any {
         return this.http.get(this.appUrl + '/movie/' + id)
                         .toPromise()
                         .then(response => response.json())
@@ -28,6 +28,12 @@ export class MovieService {
     synchronize(): Promise<any> {
         return this.http.post(this.appUrl + '/sync', {})
                     .toPromise();
+    }
+
+    healthCheckSlave(): Promise<Array<any>> {
+        return this.http.get(this.appUrl + '/slave/healthcheck')
+                        .toPromise()
+                        .then(response => response.json());
     }
 
     private handleError(error: any): Promise<any> {

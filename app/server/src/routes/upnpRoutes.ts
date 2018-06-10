@@ -5,6 +5,7 @@ import { IUpnpService } from "../services/upnp/upnpService";
 import { IHTTPUtils } from "../utils/httpUtils";
 import TOOLS from "../utils/toolsType"
 import { ISettings } from "../services/data/settings";
+let logger = require("debug")("mediacenter");
 
 @injectable()
 export class UpnpRoute implements IRoute {
@@ -20,8 +21,8 @@ export class UpnpRoute implements IRoute {
     }
 
     configure(router: Router) {
-        if(this.settings.isMaster()) {
-            console.log("[UpnpRoute::create] Creating upnp routes.");
+        if(this.settings.isMaster()) { 
+            logger("[UpnpRoute::create] Creating upnp routes.");
 
             router.get(this.APP_BASE_URL + "/devices", (req: Request, res: Response, next: NextFunction) => {
                 this._httpUtils.configureJSONResponse(req, res, this._service.devices());

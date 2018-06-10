@@ -52,8 +52,19 @@ export class MoviesRepository implements IMovies {
         return this.executeQuery({});
     }
 
-    public insertMovie(movie: Movie): void {
-        this.instance.insert(movie, err => err ? console.error(err) : console.log("Movie inserted " + (movie.metadata ? movie.metadata.title : movie.fileName)));
+    public insertMovie(movie: Movie): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.instance.insert(movie, err => {
+                if(err) {
+                    console.error(err)
+                    resolve(false);
+                }
+                else {
+                    console.log("Movie inserted " + (movie.metadata ? movie.metadata.title : movie.fileName));
+                    resolve(true);
+                }
+            });
+        });
     }
 
     public updateMovie(key: string, update: Movie): void {

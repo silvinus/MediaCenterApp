@@ -11,14 +11,23 @@ import { MovieService } from '../services/movies.service';
 export class MoviesListComponent implements OnInit {
     movies: Observable<any[]>;
     selectedMovie; any;
+    healthcheckSlave: Array<any>;
     private selectedId: number;
 
     constructor(private service: MovieService,
                 private router: Router) {
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
+        this.healthcheckSlave = await this.service.healthCheckSlave();
         this.movies = this.service.movies();
+    }
+
+    isAlive(slaveName): Boolean {
+        const slave = this.healthcheckSlave.filter(w => w.slave.name === slaveName);
+        if (slave.length === 0) { return false; }
+
+        return slave[0].isAlive;
     }
 
     onSelect(movie: any) {
